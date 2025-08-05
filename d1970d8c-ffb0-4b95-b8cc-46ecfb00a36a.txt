@@ -3,6 +3,5 @@ JWT_SECRET=harshitassanshumanassthusharass
 HEDERA_ACCOUNT_ID=0.0.6495481
 HEDERA_PRIVATE_KEY=3030020100300706052b8104000a042204200d3e31c67357367ea386adf18d0ed8516ef71b293278fa52b0c6c241835fb32b
 CHAINGPT_API_KEY=your_chaingpt_api_key
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_specific_password
+
 
