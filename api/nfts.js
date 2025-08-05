@@ -1,17 +1,24 @@
 const express = require('express');
-const { Client, TokenCreateTransaction, TokenType, TokenSupplyType, TokenMintTransaction } = require('@hedera/sdk');
+const { Client, TokenCreateTransaction, TokenType, TokenSupplyType, TokenMintTransaction } = require('@hashgraph/sdk');
 const axios = require('axios');
+const cors = require('cors'); // Import cors
 
 const app = express();
-app.use(express.json());
 
-const client = Client.forTestnet();
-client.setOperator(process.env.HEDERA_ACCOUNT_ID, process.env.HEDERA_PRIVATE_KEY);
+// --- Middleware Setup ---
+app.use(cors());
+app.use(express.json());
 
 // Create NFT
 app.post('/mint', async (req, res) => {
   const { userId, metadata } = req.body;
   try {
+    if (!process.env.HEDERA_ACCOUNT_ID || !process.env.HEDERA_PRIVATE_KEY) {
+        throw new Error("Hedera API credentials are not configured on the server.");
+    }
+    const client = Client.forTestnet();
+    client.setOperator(process.env.HEDERA_ACCOUNT_ID, process.env.HEDERA_PRIVATE_KEY);
+
     // Generate NFT with ChainGPT
     const nftResponse = await axios.post('https://api.chaingpt.org/nft/generate', {
       prompt: metadata.description,
@@ -46,7 +53,8 @@ app.post('/mint', async (req, res) => {
 
     res.json({ tokenId: tokenId.toString(), status: mintReceipt.status.toString() });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("NFT Minting Error:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
