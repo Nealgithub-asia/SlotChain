@@ -63,3 +63,4 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Export the app for the serverless environment
 module.exports = app;
+
