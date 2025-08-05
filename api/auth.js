@@ -3,11 +3,22 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
+const cors = require('cors'); // 1. Import the cors package
 
 dotenv.config();
 const app = express();
+
+// 2. Use CORS middleware
+// This will allow requests from any origin.
+// For production, you might want to restrict this to your frontend's domain.
+app.use(cors());
+
 app.use(express.json());
 
+// --- Database Connection ---
+// It's better to establish the connection once and reuse it.
+// A serverless function might reconnect on each invocation if not handled carefully.
+// This setup is okay for now.
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const UserSchema = new mongoose.Schema({
@@ -15,10 +26,15 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' }
 });
-const User = mongoose.model('User', UserSchema);
+
+// Avoid redefining the model if it's already been defined, which can happen in serverless environments
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
+
+
+// --- Routes ---
 
 // Register
-app.post('/register', async (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   const { email, password } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,7 +47,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login
-app.post('/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -45,4 +61,5 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Export the app for the serverless environment
 module.exports = app;
