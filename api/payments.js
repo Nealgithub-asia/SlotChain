@@ -1,5 +1,5 @@
 const express = require('express');
-const { Client, AccountBalanceQuery, TransferTransaction, Hbar } = require('@hedera/sdk');
+const { Client, AccountBalanceQuery, TransferTransaction, Hbar } = require('@hashgraph/sdk'); // Corrected package name
 const axios = require('axios');
 
 const app = express();

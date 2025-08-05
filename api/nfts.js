@@ -1,5 +1,5 @@
 const express = require('express');
-const { Client, TokenCreateTransaction, TokenType, TokenSupplyType, TokenMintTransaction } = require('@hedera/sdk');
+const { Client, TokenCreateTransaction, TokenType, TokenSupplyType, TokenMintTransaction } = require('@hashgraph/sdk'); // Corrected package name
 const axios = require('axios');
 
 const app = express();
