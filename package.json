@@ -1,4 +1,4 @@
-{
+
   "name": "slotchain-api",
   "version": "1.0.0",
   "description": "API for the SlotChain application",
@@ -20,4 +20,8 @@
     "mongoose": "^7.0.3",
     "nodemailer": "^6.9.1"
   }
-}
+=======
+  "name": "SlotChain",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {}
