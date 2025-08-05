@@ -772,6 +772,12 @@
     </div>
 
     <script>
+        // --- START OF CHANGES ---
+
+        // The base URL for our API. When you deploy, this will just be '/api'.
+        // For local testing with `vercel dev`, it's usually a specific port.
+        const API_URL = '/api/auth'; // Using a relative path for Vercel deployment
+
         // Application State
         let currentUser = null;
         let selectedStation = null;
@@ -796,6 +802,82 @@
             "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
             "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
         ];
+
+        // --- NEW handleAuth FUNCTION ---
+        // This function now sends data to the backend instead of faking it.
+        async function handleAuth(e) {
+            e.preventDefault();
+            const mode = document.getElementById('authModal').dataset.mode;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const endpoint = mode === 'signup' ? '/register' : '/login';
+            const url = `${API_URL}${endpoint}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // If the server response is not OK, throw an error to be caught by the catch block
+                    throw new Error(data.error || 'Something went wrong');
+                }
+
+                if (mode === 'signup') {
+                    showNotification('Account created successfully! Please log in.');
+                    // Switch to login view after successful registration
+                    showAuthModal('login');
+                } else {
+                    // On successful login, the backend sends a token
+                    localStorage.setItem('slotchain_token', data.token);
+                    // For UI purposes, we can decode the token to get user info or just use email
+                    currentUser = { email: email }; 
+                    updateAuthUI();
+                    hideAuthModal();
+                    showNotification('Logged in successfully!');
+                }
+
+            } catch (error) {
+                console.error('Authentication Error:', error);
+                showNotification(error.message, 'error');
+            }
+        }
+
+        // --- NEW logout FUNCTION ---
+        // Clears the authentication token from storage.
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('slotchain_token'); // Remove the token
+            localStorage.removeItem('slotchain_user'); // Also clear the old user object
+            updateAuthUI();
+            showMainContent();
+            showNotification('Logged out successfully');
+        }
+
+        // --- NEW checkAuthState FUNCTION ---
+        // Checks for the token to see if the user is logged in.
+        function checkAuthState() {
+            const token = localStorage.getItem('slotchain_token');
+            if (token) {
+                // In a real app, you'd verify this token with the backend.
+                // For now, we'll just assume if a token exists, the user is logged in.
+                // We don't have user's name from the token without decoding it, so we'll use a placeholder.
+                // A better approach would be to have a /api/user/me endpoint to get user details.
+                const oldUser = JSON.parse(localStorage.getItem('slotchain_user'));
+                currentUser = { name: oldUser ? oldUser.name : "User" };
+                updateAuthUI();
+            }
+        }
+
+
+        // --- END OF CHANGES ---
 
         // Leaflet Map initialization
         function initMap() {
@@ -1069,55 +1151,6 @@
             showAuthModal(currentMode === 'login' ? 'signup' : 'login');
         }
 
-        function handleAuth(e) {
-            e.preventDefault();
-            const mode = document.getElementById('authModal').dataset.mode;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const fullName = document.getElementById('fullName').value;
-            
-            // Simulate authentication
-            if (mode === 'signup') {
-                currentUser = {
-                    id: Date.now(),
-                    name: fullName,
-                    email: email,
-                    joinDate: new Date().toISOString()
-                };
-                localStorage.setItem('slotchain_user', JSON.stringify(currentUser));
-                showNotification('Account created successfully!');
-            } else {
-                // For demo, accept any email/password
-                currentUser = {
-                    id: 1,
-                    name: email.split('@')[0],
-                    email: email,
-                    joinDate: '2024-01-01'
-                };
-                localStorage.setItem('slotchain_user', JSON.stringify(currentUser));
-                showNotification('Welcome back!');
-            }
-            
-            updateAuthUI();
-            hideAuthModal();
-        }
-
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('slotchain_user');
-            updateAuthUI();
-            showMainContent();
-            showNotification('Logged out successfully');
-        }
-
-        function checkAuthState() {
-            const savedUser = localStorage.getItem('slotchain_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                updateAuthUI();
-            }
-        }
-
         function updateAuthUI() {
             const loginBtn = document.getElementById('loginBtn');
             const signupBtn = document.getElementById('signupBtn');
@@ -1128,7 +1161,7 @@
                 loginBtn.classList.add('hidden');
                 signupBtn.classList.add('hidden');
                 userMenu.classList.remove('hidden');
-                userName.textContent = currentUser.name;
+                userName.textContent = currentUser.name || currentUser.email;
             } else {
                 loginBtn.classList.remove('hidden');
                 signupBtn.classList.remove('hidden');
