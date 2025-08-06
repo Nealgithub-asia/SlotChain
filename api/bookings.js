@@ -1,85 +1,121 @@
-const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const cors = require('cors'); // Import cors
+const dotenv = require('dotenv');
+const cors = require('cors');
 
-const app = express();
+dotenv.config();
 
-// --- Middleware Setup ---
-app.use(cors());
-app.use(express.json());
+// --- Database Connection ---
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
+  return mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+};
 
+// --- Mongoose Schemas ---
 const StationSchema = new mongoose.Schema({
   name: String,
-  settings: { type: Object, default: { duration: 60, maxSlots: 10 } }
+  ownerName: String,
+  address: String,
+  phone: String,
+  email: String,
+  walletAddress: String,
+  services: [String],
+  features: [String],
+  rating: Number,
+  user_ratings_total: Number,
+  price_level: Number,
+  photos: [String],
+  reviews: [{ text: String, author_name: String }],
+  opening_hours: { open_now: Boolean },
+  submittedAt: Date,
+  status: String
 });
+
 const BookingSchema = new mongoose.Schema({
   stationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Station' },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  slot: Date,
-  status: { type: String, enum: ['booked', 'cancelled'], default: 'booked' }
+  stationName: String,
+  stationAddress: String,
+  service: String,
+  date: String,
+  time: String,
+  amount: String,
+  paymentMethod: String,
+  status: { type: String, enum: ['confirmed', 'cancelled'], default: 'confirmed' },
+  createdAt: { type: Date, default: Date.now }
 });
 
 const Station = mongoose.models.Station || mongoose.model('Station', StationSchema);
 const Booking = mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
 
-// Middleware to verify JWT
-const auth = (req, res, next) => {
+// --- Auth Middleware ---
+// This function checks for a valid JWT in the request headers.
+const auth = (handler) => async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Unauthorized: No token provided' });
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided' });
+  }
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
-    next();
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: decoded.id }; // Attach user ID to the request
+    return handler(req, res);
   } catch (error) {
-    res.status(401).json({ error: 'Invalid or expired token' });
+    return res.status(401).json({ error: 'Invalid or expired token' });
   }
 };
 
-// Create station (admin only)
-app.post('/stations', auth, async (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden: Admins only' });
-  try {
-    const station = new Station(req.body);
-    await station.save();
-    res.status(201).json(station);
-  } catch(error) {
-    res.status(500).json({ error: 'Failed to create station.' });
-  }
-});
+// --- Main Serverless Function ---
+module.exports = async (req, res) => {
+  const corsMiddleware = cors();
+  await new Promise((resolve, reject) => {
+    corsMiddleware(req, res, (result) => {
+      if (result instanceof Error) return reject(result);
+      return resolve(result);
+    });
+  });
 
-// Book slot
-app.post('/book', auth, async (req, res) => {
   try {
-    const { stationId, slot } = req.body;
-    const booking = new Booking({ stationId, userId: req.user.id, slot });
-    await booking.save();
-    res.status(201).json(booking);
-  } catch(error) {
-    res.status(500).json({ error: 'Failed to create booking.' });
-  }
-});
+    await connectDB();
 
-// Get available slots
-app.get('/slots/:stationId', async (req, res) => {
-    try {
-        const { stationId } = req.params;
-        const bookings = await Booking.find({ stationId, status: 'booked' });
-        const station = await Station.findById(stationId);
-        if (!station) {
-            return res.status(404).json({ error: 'Station not found.' });
-        }
-        const slots = [];
-        const now = new Date();
-        for (let i = 0; i < station.settings.maxSlots; i++) {
-            const slot = new Date(now.getTime() + i * station.settings.duration * 60000);
-            if (!bookings.some(b => b.slot.getTime() === slot.getTime())) {
-            slots.push(slot);
-            }
-        }
-        res.json(slots);
-    } catch(error) {
-        res.status(500).json({ error: 'Failed to get available slots.' });
+    if (req.method === 'POST' && req.url === '/api/bookings/create') {
+        // This is a protected route, so we wrap it with our auth middleware
+        return auth(async (req, res) => {
+            const { stationId, stationName, stationAddress, service, date, time, amount, paymentMethod } = req.body;
+            const booking = new Booking({
+                stationId,
+                userId: req.user.id,
+                stationName,
+                stationAddress,
+                service,
+                date,
+                time,
+                amount,
+                paymentMethod,
+                status: 'confirmed'
+            });
+            await booking.save();
+            res.status(201).json(booking);
+        })(req, res);
     }
-});
 
-module.exports = app;
+    if (req.method === 'GET' && req.url.startsWith('/api/bookings')) {
+        // This is a protected route
+        return auth(async (req, res) => {
+            const bookings = await Booking.find({ userId: req.user.id }).sort({ createdAt: -1 });
+            res.status(200).json(bookings);
+        })(req, res);
+    }
+    
+    // If no route matches
+    res.status(404).json({ error: 'Route not found.' });
+
+  } catch (error) {
+    console.error('[API_BOOKINGS_ERROR]', error);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+  }
+};

@@ -781,7 +781,7 @@
         let currentUser = null;
         let selectedStation = null;
         let selectedSlot = null;
-        let bookings = JSON.parse(localStorage.getItem('slotchain_bookings') || '[]');
+        let bookings = []; // **FIX**: We will now fetch this from the server
         let nftCollection = JSON.parse(localStorage.getItem('slotchain_nfts') || '[]');
 
         let chatbotOpen = false;
@@ -843,6 +843,95 @@
 
             } catch (error) {
                 console.error('Authentication Error:', error);
+                showNotification(error.message, 'error');
+            }
+        }
+
+        // **FIX**: Updated confirmBooking to send data to the server
+        async function confirmBooking() {
+            const service = document.getElementById('serviceSelect');
+            const selectedOption = service.options[service.selectedIndex];
+            const date = document.getElementById('bookingDate').value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            const token = localStorage.getItem('slotchain_token');
+
+            if (!paymentMethod) {
+                showNotification('Please select a payment method', 'error');
+                return;
+            }
+             if (!token) {
+                showNotification('You must be logged in to book.', 'error');
+                showAuthModal('login');
+                return;
+            }
+            
+            const totalAmountText = document.getElementById('totalAmount').textContent;
+            const amount = totalAmountText.replace('$', '');
+            
+            const bookingData = {
+                stationId: selectedStation.id, // Note: This might need to be a real MongoDB ObjectId
+                stationName: selectedStation.stationName || selectedStation.name,
+                stationAddress: selectedStation.address || selectedStation.location,
+                service: selectedOption.text,
+                date: date,
+                time: selectedSlot,
+                amount: amount,
+                paymentMethod: paymentMethod.value,
+            };
+
+            try {
+                const response = await fetch('/api/bookings/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(bookingData),
+                });
+
+                const newBooking = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(newBooking.error || 'Failed to create booking.');
+                }
+                
+                // The rest of the logic can stay the same for now
+                if (paymentMethod.value === 'hedera') {
+                    const nft = { id: Date.now(), number: document.getElementById('nftNumber').textContent, service: service.value, date: date, rarity: Math.random() > 0.7 ? 'rare' : 'common', createdAt: new Date().toISOString() };
+                    nftCollection.push(nft);
+                    localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
+                }
+                
+                hideBookingModal();
+                showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
+
+            } catch (error) {
+                console.error('Booking Error:', error);
+                showNotification(error.message, 'error');
+            }
+        }
+
+        // **FIX**: Updated loadDashboardData to fetch from the server
+        async function loadDashboardData() {
+            const token = localStorage.getItem('slotchain_token');
+            if (!token) return;
+
+            try {
+                const response = await fetch('/api/bookings', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const serverBookings = await response.json();
+                if (!response.ok) {
+                    throw new Error(serverBookings.error || 'Could not fetch bookings.');
+                }
+                bookings = serverBookings; // Replace local bookings with server data
+                loadUpcomingBookings();
+                loadBookingHistory();
+                loadNFTCollection(); // This still uses local storage for now
+            } catch (error) {
+                console.error("Failed to load dashboard data:", error);
                 showNotification(error.message, 'error');
             }
         }
@@ -1367,34 +1456,7 @@
                 nftPreview.classList.add('hidden');
             }
         }
-
-        function confirmBooking() {
-            const service = document.getElementById('serviceSelect');
-            const selectedOption = service.options[service.selectedIndex];
-            const date = document.getElementById('bookingDate').value;
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-            if (!paymentMethod) {
-                alert('Please select a payment method');
-                return;
-            }
-            if (!selectedStation) {
-                showNotification('No station selected. Please try booking again.', 'error');
-                return;
-            }
-            const totalAmountText = document.getElementById('totalAmount').textContent;
-            const amount = totalAmountText.replace('$', '');
-            const booking = { id: Date.now(), stationId: selectedStation.id, stationName: selectedStation.stationName || selectedStation.name, stationAddress: selectedStation.address || selectedStation.location, service: selectedOption.text, date: date, time: selectedSlot, amount: amount, paymentMethod: paymentMethod.value, status: 'confirmed', createdAt: new Date().toISOString() };
-            bookings.push(booking);
-            localStorage.setItem('slotchain_bookings', JSON.stringify(bookings));
-            if (paymentMethod.value === 'hedera') {
-                const nft = { id: Date.now(), number: document.getElementById('nftNumber').textContent, service: service.value, date: date, rarity: Math.random() > 0.7 ? 'rare' : 'common', createdAt: new Date().toISOString() };
-                nftCollection.push(nft);
-                localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
-            }
-            hideBookingModal();
-            showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
-        }
-
+        
         function showDashboard() {
             document.getElementById('mainContent').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
@@ -1404,12 +1466,6 @@
         function showMainContent() {
             document.getElementById('mainContent').classList.remove('hidden');
             document.getElementById('dashboard').classList.add('hidden');
-        }
-
-        function loadDashboardData() {
-            loadUpcomingBookings();
-            loadBookingHistory();
-            loadNFTCollection();
         }
 
         function loadUpcomingBookings() {
