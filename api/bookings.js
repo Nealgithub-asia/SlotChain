@@ -17,28 +17,16 @@ const connectDB = async () => {
 };
 
 // --- Mongoose Schemas ---
-const StationSchema = new mongoose.Schema({
-  name: String,
-  ownerName: String,
-  address: String,
-  phone: String,
-  email: String,
-  walletAddress: String,
-  services: [String],
-  features: [String],
-  rating: Number,
-  user_ratings_total: Number,
-  price_level: Number,
-  photos: [String],
-  reviews: [{ text: String, author_name: String }],
-  opening_hours: { open_now: Boolean },
-  submittedAt: Date,
-  status: String
+// We need to define the User model here as well to link bookings to users.
+const UserSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' }
 });
 
 const BookingSchema = new mongoose.Schema({
-  stationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Station' },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  stationId: { type: String, required: true }, // Using String for simplicity with demo data
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   stationName: String,
   stationAddress: String,
   service: String,
@@ -50,7 +38,7 @@ const BookingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-const Station = mongoose.models.Station || mongoose.model('Station', StationSchema);
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Booking = mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
 
 // --- Auth Middleware ---
@@ -82,7 +70,8 @@ module.exports = async (req, res) => {
   try {
     await connectDB();
 
-    if (req.method === 'POST' && req.url === '/api/bookings/create') {
+    // Route to CREATE a new booking
+    if (req.method === 'POST' && req.url === '/api/bookings') {
         // This is a protected route, so we wrap it with our auth middleware
         return auth(async (req, res) => {
             const { stationId, stationName, stationAddress, service, date, time, amount, paymentMethod } = req.body;
@@ -103,8 +92,9 @@ module.exports = async (req, res) => {
         })(req, res);
     }
 
-    if (req.method === 'GET' && req.url.startsWith('/api/bookings')) {
-        // This is a protected route
+    // Route to GET all bookings for the logged-in user
+    if (req.method === 'GET' && req.url === '/api/bookings') {
+        // This is also a protected route
         return auth(async (req, res) => {
             const bookings = await Booking.find({ userId: req.user.id }).sort({ createdAt: -1 });
             res.status(200).json(bookings);
