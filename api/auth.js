@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const jwt =require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -13,8 +13,6 @@ app.use(cors());
 app.use(express.json());
 
 // --- Database Connection ---
-// This connects to the database when the API is first called
-// and reuses the connection for subsequent calls.
 const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) {
     return;
@@ -25,20 +23,6 @@ const connectDB = async () => {
   });
 };
 
-// --- Main Handler Function ---
-// This function will run for every request to /api/auth/*
-const main = async (req, res) => {
-    try {
-        await connectDB();
-    } catch (e) {
-        console.error('Database connection failed!', e);
-        return res.status(500).json({ error: "Server error: Could not connect to database." });
-    }
-    // This passes the request to the express app
-    return app(req, res);
-};
-
-
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -48,11 +32,11 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 // --- Route Handlers ---
-// These routes are relative to the file path.
-// Vercel knows that a request to /api/auth/register should run this.
-app.post('/api/auth/register', async (req, res) => {
-  const { email, password } = req.body;
+// **FIX:** The routes are now relative to the file path /api/auth
+app.post('/register', async (req, res) => {
   try {
+    await connectDB();
+    const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
@@ -69,14 +53,15 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body;
+app.post('/login', async (req, res) => {
   try {
+    await connectDB();
+    const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user || !await bcrypt.compare(password, user.password)) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   } catch (error) {
     console.error("Login Error:", error);
@@ -84,5 +69,6 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Export the main handler function for Vercel
-module.exports = main;
+// **FIX:** All requests to /api/auth are now handled by this single file.
+// We export the express app itself.
+module.exports = app;
