@@ -134,9 +134,534 @@
         .dark .message.bot { background: #374151; color: #d1d5db; }
         .typing-indicator { display: none; align-self: flex-start; padding: 8px 12px; background: #f3f4f6; border-radius: 12px; }
         .dark .typing-indicator { background: #374151; }
-        .
+        .typing-dots { display: flex; gap: 4px; }
+        .typing-dot { width: 6px; height: 6px; background: #9ca3af; border-radius: 50%; animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
         
-        <!-- Dashboard -->
+        /* Image Carousel Styles */
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 12px 12px 0 0;
+        }
+        .carousel-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .carousel-image.active {
+            opacity: 1;
+        }
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+        .carousel-controls:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .carousel-prev {
+            left: 10px;
+        }
+        .carousel-next {
+            right: 10px;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle { position: relative; width: 50px; height: 24px; background: #d1d5db; border-radius: 12px; cursor: pointer; transition: background 0.3s ease; }
+        .theme-toggle.dark { background: #ff8c00; }
+        .theme-toggle-slider { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.3s ease; }
+        .theme-toggle.dark .theme-toggle-slider { transform: translateX(26px); }
+    </style>
+</head>
+<body class="bg-gray-50 dark">
+    <!-- Notification System -->
+    <div id="notification" class="notification bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span id="notificationText">Booking confirmed!</span>
+            </div>
+            <button id="closeNotification" class="ml-4 text-white hover:text-gray-200 transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-cut text-2xl text-orange-500 mr-2"></i>
+                        <span class="text-2xl font-bold text-gray-900">SlotChain</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="setupStationBtn" class="text-orange-500 hover:text-orange-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                        <i class="fas fa-store mr-2"></i>
+                        Setup Station
+                    </button>
+                    <button id="loginBtn" class="text-gray-700 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium">Login</button>
+                    <button id="signupBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium">Sign Up</button>
+                    <div id="userMenu" class="hidden flex items-center space-x-4">
+                        <span id="userName" class="text-gray-700 font-medium"></span>
+                        <button id="dashboardBtn" class="text-orange-500 hover:text-orange-600">Dashboard</button>
+                        <button id="logoutBtn" class="text-gray-500 hover:text-gray-700">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="mainContent">
+        <!-- Hero Section -->
+        <section class="relative text-white py-20 overflow-hidden">
+            <!-- Background Image -->
+            <div class="absolute inset-0">
+                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1920&h=1080&fit=crop" 
+                     alt="Modern Indian barber shop interior" 
+                     class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+            </div>
+            
+            <!-- Content Overlay -->
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-5xl font-bold mb-6">Your next haircut or makeover, just a click away</h1>
+                <p class="text-xl mb-8 opacity-90">Secure blockchain-powered bookings with crypto payments and exclusive NFT rewards</p>
+                <div class="flex justify-center">
+                    <button id="bookNowBtn" class="bg-white text-orange-500 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">Book Now</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Why Choose SlotChain?</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Experience the future of grooming bookings with blockchain technology</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center p-6 card-hover bg-gray-50 rounded-xl">
+                        <div class="crypto-glow bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-coins text-2xl text-orange-500"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Crypto Payments</h3>
+                        <p class="text-gray-600">Pay with Hedera HBAR or traditional cards</p>
+                    </div>
+                    <div class="text-center p-6 card-hover bg-gray-50 rounded-xl">
+                        <div class="nft-glow bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-gem text-2xl text-purple-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">NFT Rewards</h3>
+                        <p class="text-gray-600">Earn exclusive collectible NFTs with each booking</p>
+                    </div>
+                    <div class="text-center p-6 card-hover bg-gray-50 rounded-xl">
+                        <div class="secure-glow bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-2xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">Secure Booking</h3>
+                        <p class="text-gray-600">Blockchain-secured appointments and data</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Network Section -->
+        <section id="stationsSection" class="py-16 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">SlotChain Network</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Discover grooming stations in your area or join our network as a station owner</p>
+                </div>
+                
+                <!-- Location Controls -->
+                <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                        <button id="useLocationBtn" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300 flex items-center justify-center">
+                            <i class="fas fa-location-arrow mr-2"></i>
+                            Use My Location
+                        </button>
+                        <div class="flex">
+                            <input type="text" id="locationInput" placeholder="Enter city or address" class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0">
+                            <button id="searchLocationBtn" class="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700 transition duration-300 flex-shrink-0">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <select id="citySelect" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0">
+                            <option value="">Select a city</option>
+                            <option value="Bengaluru, Karnataka">Bengaluru</option>
+                            <option value="Mysuru, Karnataka">Mysuru</option>
+                            <option value="Hubli, Karnataka">Hubli</option>
+                            <option value="Dharwad, Karnataka">Dharwad</option>
+                            <option value="Mangaluru, Karnataka">Mangaluru</option>
+                            <option value="Belagavi, Karnataka">Belagavi</option>
+                            <option value="Davangere, Karnataka">Davangere</option>
+                            <option value="Ballari, Karnataka">Ballari</option>
+                            <option value="Vijayapura, Karnataka">Vijayapura</option>
+                            <option value="Shivamogga, Karnataka">Shivamogga</option>
+                            <option value="Tumakuru, Karnataka">Tumakuru</option>
+                            <option value="Raichur, Karnataka">Raichur</option>
+                            <option value="Bidar, Karnataka">Bidar</option>
+                            <option value="Hospet, Karnataka">Hospet</option>
+                            <option value="Hassan, Karnataka">Hassan</option>
+                            <option value="Gadag, Karnataka">Gadag</option>
+                            <option value="Udupi, Karnataka">Udupi</option>
+                            <option value="Kolar, Karnataka">Kolar</option>
+                            <option value="Mandya, Karnataka">Mandya</option>
+                            <option value="Chikkamagaluru, Karnataka">Chikkamagaluru</option>
+                            <option value="Chitradurga, Karnataka">Chitradurga</option>
+                        </select>
+                        <button id="searchCityBtn" class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300 whitespace-nowrap">
+                            Search City
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <label class="text-sm font-medium text-gray-700">Search Radius:</label>
+                            <select id="radiusSelect" class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="5000">5 km</option>
+                                <option value="10000" selected>10 km</option>
+                                <option value="25000">25 km</option>
+                                <option value="50000">50 km</option>
+                            </select>
+                        </div>
+                        <div id="locationStatus" class="hidden text-sm text-gray-600">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            <span id="currentLocation">Searching...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-center space-x-4 mb-8">
+                    <button id="browseStationsBtn" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 flex items-center">
+                        <i class="fas fa-search mr-2"></i>
+                        Browse Stations
+                    </button>
+                    <button id="setupStationMainBtn" class="border-2 border-indigo-600 text-indigo-600 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-600 hover:text-white transition duration-300 flex items-center">
+                        <i class="fas fa-store mr-2"></i>
+                        Setup Your Station
+                    </button>
+                </div>
+                
+                <!-- Loading State -->
+                <div id="loadingStations" class="hidden text-center py-12">
+                    <div class="loading-spinner mx-auto mb-4"></div>
+                    <p class="text-gray-600">Finding grooming stations near you...</p>
+                </div>
+                
+                <!-- Stations Display -->
+                <div id="stationsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Stations will be populated here -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+            <button id="closeAuthModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <h3 id="authTitle" class="text-2xl font-bold text-gray-900">Welcome to SlotChain</h3>
+                <p class="text-gray-600 mt-2">Join the future of grooming bookings</p>
+            </div>
+            
+            <form id="authForm">
+                <div id="nameField" class="hidden mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <input type="text" id="fullName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input type="email" id="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <button type="submit" id="authSubmit" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Sign In</button>
+            </form>
+            
+            <div class="mt-4 text-center">
+                <button id="authToggle" class="text-indigo-600 hover:text-indigo-800">Don't have an account? Sign up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto relative">
+            <button id="closeBookingModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">Book Your Appointment</h3>
+            </div>
+            
+            <div id="bookingStep1" class="booking-step">
+                <h4 class="text-lg font-semibold mb-4">Select Service & Date</h4>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Service</label>
+                    <select id="serviceSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Select a service</option>
+                        <option value="haircut">Haircut</option>
+                        <option value="beard-trim">Beard Trim</option>
+                        <option value="full-service">Full Service</option>
+                        <option value="styling">Hair Styling</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                    <input type="date" id="bookingDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Available Time Slots</label>
+                    <div id="timeSlots" class="grid grid-cols-3 gap-2">
+                        <!-- Time slots will be populated here -->
+                    </div>
+                </div>
+                <button id="nextToPayment" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300 disabled:bg-gray-400" disabled>Continue to Payment</button>
+            </div>
+            
+            <div id="bookingStep2" class="booking-step hidden">
+                <h4 class="text-lg font-semibold mb-4">Payment & NFT Minting</h4>
+                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span>Service:</span>
+                        <span id="selectedService" class="font-semibold"></span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span>Date & Time:</span>
+                        <span id="selectedDateTime" class="font-semibold"></span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-bold">
+                        <span>Total:</span>
+                        <span id="totalAmount">$0</span>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h5 class="font-semibold mb-3">Payment Method</h5>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border-2 border-purple-400 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 dark:hover:from-purple-900/30 dark:hover:to-indigo-900/30 hover:border-purple-500 dark:hover:border-purple-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-purple-25 to-indigo-25">
+                            <input type="radio" name="paymentMethod" value="hedera" class="mr-4">
+                            <div class="hbar-glossy p-4 rounded-xl relative overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-purple-400 to-indigo-600 opacity-20"></div>
+                                <div class="w-8 h-8 text-white relative z-10 flex items-center justify-center font-bold text-2xl">
+                                    <div class="relative">
+                                        <div class="text-white font-black text-2xl leading-none">H</div>
+                                        <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white transform -translate-y-1"></div>
+                                        <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white transform translate-y-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="font-bold text-lg text-gray-900 dark:text-white">
+                                    Hedera HBAR
+                                </div>
+                                <div class="text-sm text-purple-800 dark:text-purple-300 font-semibold">Pay with cryptocurrency + Get exclusive NFT reward</div>
+                                <div class="text-xs text-purple-700 dark:text-purple-400 mt-1 font-medium">✨ Earn collectible tokens with every booking</div>
+                            </div>
+                        </label>
+                        <label class="card-payment-option flex items-center p-4 border-2 border-emerald-500 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 dark:hover:from-emerald-900/30 dark:hover:to-green-900/30 hover:border-emerald-600 dark:hover:border-emerald-400 transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-r from-emerald-50/50 to-green-50/50 dark:bg-gradient-to-r dark:from-emerald-900/20 dark:to-green-900/20">
+                            <input type="radio" name="paymentMethod" value="card" class="mr-4">
+                            <div class="card-glossy p-4 rounded-xl">
+                                <i class="fas fa-credit-card text-white text-xl"></i>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="font-bold text-lg text-emerald-900 dark:text-emerald-100">Credit/Debit Card</div>
+                                <div class="text-sm text-emerald-800 dark:text-emerald-200 font-semibold">Traditional payment method</div>
+
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="nftPreview" class="hidden mb-6 p-6 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg border-2 border-purple-400 shadow-lg">
+                    <h5 class="font-bold mb-3 flex items-center text-white text-lg">
+                        <i class="fas fa-gem text-yellow-300 mr-2 text-xl"></i>
+                        Your Exclusive NFT Reward
+                    </h5>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center nft-shimmer shadow-lg border-2 border-yellow-300">
+                            <i class="fas fa-cut text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white text-lg">SlotChain Grooming NFT #<span id="nftNumber">001</span></div>
+                            <div class="text-purple-100 font-medium">Collectible grooming experience token</div>
+                            <div class="text-yellow-300 text-sm font-semibold mt-1">✨ Limited Edition ✨</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button id="backToBooking" class="flex-1 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 transition duration-300">Back</button>
+                    <button id="confirmBooking" class="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Confirm Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Station Setup Modal -->
+    <div id="stationSetupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto relative">
+            <button id="closeStationSetupModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">Setup Your Grooming Station</h3>
+            </div>
+            
+            <div class="mb-6">
+                <div class="bg-gradient-to-r from-orange-100 to-yellow-100 p-6 rounded-lg mb-6 border border-orange-200">
+                    <h4 class="text-lg font-semibold mb-2 flex items-center text-gray-900">
+                        <i class="fas fa-store text-orange-600 mr-2"></i>
+                        Join the SlotChain Network
+                    </h4>
+                    <p class="text-gray-800 font-medium">List your grooming station on SlotChain and start accepting crypto payments with automatic NFT rewards for your customers!</p>
+                </div>
+                
+                <form id="stationSetupForm">
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Station Name</label>
+                            <input type="text" id="stationName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Downtown Cuts" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Owner Name</label>
+                            <input type="text" id="ownerName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Your full name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                        <input type="text" id="stationAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="123 Main St, City, State" required>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="stationPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="(555) 123-4567" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="stationEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="contact@yourstation.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Services Offered</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" value="haircut" class="mr-2 service-checkbox">
+                                <span>Haircuts</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="beard-trim" class="mr-2 service-checkbox">
+                                <span>Beard Trimming</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="styling" class="mr-2 service-checkbox">
+                                <span>Hair Styling</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="full-service" class="mr-2 service-checkbox">
+                                <span>Full Service</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Station Features</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" value="wifi" class="mr-2 feature-checkbox">
+                                <span>WiFi</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="parking" class="mr-2 feature-checkbox">
+                                <span>Parking Available</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="premium-products" class="mr-2 feature-checkbox">
+                                <span>Premium Products</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" value="massage-chairs" class="mr-2 feature-checkbox">
+                                <span>Massage Chairs</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Hedera HBAR Wallet Address</label>
+                        <input type="text" id="walletAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0.0.123456 (for receiving crypto payments)" required>
+                        <p class="text-sm text-gray-500 mt-1">This is where you'll receive HBAR payments from customers</p>
+                    </div>
+                    
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-yellow-600 mr-2 mt-1"></i>
+                            <div>
+                                <h5 class="font-semibold text-yellow-800">Setup Process</h5>
+                                <p class="text-sm text-yellow-700">After submitting, our team will review your application and contact you within 2-3 business days to complete the onboarding process.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition duration-300 font-semibold">
+                        Submit Station Application
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
     <div id="dashboard" class="hidden bg-gray-50 dark min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="mb-8">
@@ -186,52 +711,191 @@
                         </div>
                     </div>
                     
-                    <!-- START OF NEW CODE -->
-                    <div class="bg-white rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-semibold mb-4 text-gray-900 flex items-center">
-                            <i class="fas fa-bell text-yellow-500 mr-2"></i>
-                            Notifications
-                        </h2>
-                        <div id="notifications" class="space-y-2">
-                            <!-- Notifications will be populated here -->
-                        </div>
-                    </div>
-                    <!-- END OF NEW CODE -->
+
                 </div>
             </div>
         </div>
     </div>
-        
+
+    <!-- Credits Section -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="text-lg font-bold text-orange-400 mb-2" style="text-shadow: 0 0 10px rgba(255, 140, 0, 0.6), 0 0 20px rgba(255, 140, 0, 0.4), 0 0 30px rgba(255, 140, 0, 0.2);">
+                    Team Hat
+                </div>
+                <div class="text-sm text-gray-300" style="text-shadow: 0 0 10px rgba(255, 140, 0, 0.6), 0 0 20px rgba(255, 140, 0, 0.4), 0 0 30px rgba(255, 140, 0, 0.2);">
+                    Created by Harshit, Anshuman & Thushar
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <div id="chatbotWindow" class="chatbot-window">
+            <div class="chatbot-header">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h4 class="font-semibold">SlotChain Assistant</h4>
+                        <p class="text-sm opacity-90">Ask me anything about bookings!</p>
+                    </div>
+                    <button id="closeChatbot" class="text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="chatbotMessages" class="chatbot-messages">
+                <div class="message bot">
+                    Hi! I'm your SlotChain assistant. I can help you with booking questions, payment info, or anything about our grooming stations. How can I help you today?
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            <div class="chatbot-input-area">
+                <div class="flex space-x-2">
+                    <input type="text" id="chatbotInput" placeholder="Type your message..." class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button id="sendMessage" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button id="chatbotToggle" class="chatbot-toggle">
+            <i class="fas fa-comments text-xl"></i>
+        </button>
+    </div>
+
     <script>
         // --- START OF CHANGES ---
         
-        const AUTH_API_URL = '/api/auth';
+        const AUTH_API_URL = '/api/auth'; 
         const BOOKINGS_API_URL = '/api/bookings';
-        const NOTIFICATIONS_API_URL = '/api/notifications';
 
-        // ... (rest of your script)
+        // Application State
+        let currentUser = null;
+        let selectedStation = null;
+        let selectedSlot = null;
+        let bookings = []; // **FIX**: We now fetch this from the server
+        let nftCollection = JSON.parse(localStorage.getItem('slotchain_nfts') || '[]');
+
+        let chatbotOpen = false;
+        let map = null;
+        let service = null;
+        let userLocation = null;
+        let groomingStations = [];
+        let stationCarousels = {};
         
-        // **FIX**: Updated confirmBooking to send data to the server
-        async function confirmBooking() {
-            // ... (your existing code)
+        const PERPLEXITY_API_KEY = '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';
+        const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
+
+        const timeSlots = [
+            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
+        ];
+        
+        async function handleAuth(e) {
+            e.preventDefault();
+            const mode = document.getElementById('authModal').dataset.mode;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const action = mode === 'signup' ? 'register' : 'login';
 
             try {
-                // ... (your existing booking creation code)
-                
-                // --- START OF NEW CODE ---
-                // Send a notification after successful booking
-                const notificationMessage = `New booking confirmed for ${selectedOption.text} at ${selectedStation.stationName || selectedStation.name} on ${date} at ${selectedSlot}.`;
-                await fetch(NOTIFICATIONS_API_URL + '/notify', {
+                const response = await fetch(AUTH_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, email, password }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Something went wrong');
+                }
+
+                if (action === 'register') {
+                    showNotification('Account created successfully! Please log in.');
+                    showAuthModal('login');
+                } else {
+                    localStorage.setItem('slotchain_token', data.token);
+                    const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
+                    currentUser = { email: decodedToken.email, name: email.split('@')[0] }; 
+                    localStorage.setItem('slotchain_user', JSON.stringify(currentUser));
+                    updateAuthUI();
+                    hideAuthModal();
+                    showNotification('Logged in successfully!');
+                }
+
+            } catch (error) {
+                console.error('Authentication Error:', error);
+                showNotification(error.message, 'error');
+            }
+        }
+
+        // **FIX**: Updated confirmBooking to send data to the server
+        async function confirmBooking() {
+            const service = document.getElementById('serviceSelect');
+            const selectedOption = service.options[service.selectedIndex];
+            const date = document.getElementById('bookingDate').value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            const token = localStorage.getItem('slotchain_token');
+
+            if (!paymentMethod) {
+                showNotification('Please select a payment method', 'error');
+                return;
+            }
+             if (!token) {
+                showNotification('You must be logged in to book.', 'error');
+                showAuthModal('login');
+                return;
+            }
+            
+            const totalAmountText = document.getElementById('totalAmount').textContent;
+            const amount = totalAmountText.replace('$', '');
+            
+            const bookingData = {
+                stationId: selectedStation.id,
+                stationName: selectedStation.stationName || selectedStation.name,
+                stationAddress: selectedStation.address || selectedStation.location,
+                service: selectedOption.text,
+                date: date,
+                time: selectedSlot,
+                amount: amount,
+                paymentMethod: paymentMethod.value,
+            };
+
+            try {
+                const response = await fetch(BOOKINGS_API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ message: notificationMessage, userId: currentUser.id }),
+                    body: JSON.stringify(bookingData),
                 });
-                // --- END OF NEW CODE ---
+
+                const newBooking = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(newBooking.error || 'Failed to create booking.');
+                }
                 
-                // ... (rest of your existing code)
+                if (paymentMethod.value === 'hedera') {
+                    const nft = { id: Date.now(), number: document.getElementById('nftNumber').textContent, service: service.value, date: date, rarity: Math.random() > 0.7 ? 'rare' : 'common', createdAt: new Date().toISOString() };
+                    nftCollection.push(nft);
+                    localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
+                }
+                
+                hideBookingModal();
+                showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
 
             } catch (error) {
                 console.error('Booking Error:', error);
@@ -258,50 +922,84 @@
                 loadUpcomingBookings();
                 loadBookingHistory();
                 loadNFTCollection();
-                loadNotifications(); // <-- ADD THIS LINE
             } catch (error) {
                 console.error("Failed to load dashboard data:", error);
                 showNotification(error.message, 'error');
             }
         }
-        
-        // --- START OF NEW CODE ---
-        async function loadNotifications() {
+
+        function logout() {
+            currentUser = null;
+            bookings = []; // Clear bookings on logout
+            localStorage.removeItem('slotchain_token');
+            localStorage.removeItem('slotchain_user');
+            updateAuthUI();
+            showMainContent();
+            showNotification('Logged out successfully');
+        }
+
+        function checkAuthState() {
             const token = localStorage.getItem('slotchain_token');
-            if (!token) return;
-
-            try {
-                const response = await fetch(NOTIFICATIONS_API_URL, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const notifications = await response.json();
-                if (!response.ok) {
-                    throw new Error(notifications.error || 'Could not fetch notifications.');
+            if (token) {
+                const savedUser = JSON.parse(localStorage.getItem('slotchain_user'));
+                if (savedUser) {
+                    currentUser = savedUser;
+                    updateAuthUI();
                 }
-                
-                const container = document.getElementById('notifications');
-                if (notifications.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500">No new notifications</p>';
-                    return;
-                }
-                
-                container.innerHTML = notifications.map(notification => `
-                    <div class="border-l-4 ${notification.read ? 'border-gray-400' : 'border-yellow-500'} pl-3">
-                        <p class="text-sm text-gray-700">${notification.message}</p>
-                        <p class="text-xs text-gray-500">${new Date(notification.createdAt).toLocaleString()}</p>
-                    </div>
-                `).join('');
-
-            } catch (error) {
-                console.error("Failed to load notifications:", error);
-                showNotification(error.message, 'error');
             }
         }
-        // --- END OF NEW CODE ---
         
-        // ... (rest of your script)
-    </script>
-</body>
-</html>
+        // --- All other functions remain the same ---
+
+        function initMap() {
+            try {
+                const mapDiv = document.createElement('div');
+                mapDiv.style.display = 'none';
+                document.body.appendChild(mapDiv);
+                map = L.map(mapDiv).setView([12.9716, 77.5946], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            userLocation = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            };
+                            searchNearbyStations();
+                        },
+                        () => { showDemoStations(); }
+                    );
+                } else {
+                    showDemoStations();
+                }
+            } catch (error) {
+                console.log('Leaflet not available, showing demo stations');
+                showDemoStations();
+            }
+        }
+        
+        window.addEventListener('load', function() {
+            initMap();
+            initializeDummyStations();
+        });
+        
+        function initializeDummyStations() {
+            const dummyStations = [
+                {
+                    id: 'station_1',
+                    stationName: 'Royal Cuts & Grooming',
+                    ownerName: 'Rajesh Kumar',
+                    address: '123 MG Road, Koramangala, Bengaluru, Karnataka',
+                    phone: '(080) 123-4567',
+                    email: 'contact@royalcuts.com',
+                    walletAddress: '0.0.123456',
+                    services: ['haircut', 'beard-trim', 'styling', 'full-service'],
+                    features: ['wifi', 'parking', 'premium-products', 'massage-chairs'],
+                    rating: 4.8,
+                    user_ratings_total: 156,
+                    price_level: 3,
+                    photos: [
+                        'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop',
+                        'https://images.unsplash.com/photo-1503951914875-4
