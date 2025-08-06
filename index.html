@@ -772,7 +772,9 @@
     </div>
 
     <script>
-        // **FIX**: The API URL now correctly points to the Vercel API path.
+        // --- START OF CHANGES ---
+        
+        // **FIX**: The API URL now correctly points to the single serverless function.
         const API_URL = '/api/auth'; 
 
         // Application State
@@ -798,23 +800,23 @@
             "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
         ];
         
+        // **FIX**: Updated handleAuth to match the new simplified backend.
         async function handleAuth(e) {
             e.preventDefault();
             const mode = document.getElementById('authModal').dataset.mode;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // **FIX**: The endpoint is now just /register or /login
-            const endpoint = mode === 'signup' ? '/register' : '/login';
-            const url = `${API_URL}${endpoint}`;
+            const action = mode === 'signup' ? 'register' : 'login';
 
             try {
-                const response = await fetch(url, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email, password }),
+                    // We now send the action in the body of the request
+                    body: JSON.stringify({ action, email, password }),
                 });
 
                 const data = await response.json();
@@ -823,14 +825,17 @@
                     throw new Error(data.error || 'Something went wrong');
                 }
 
-                if (mode === 'signup') {
+                if (action === 'register') {
                     showNotification('Account created successfully! Please log in.');
                     showAuthModal('login');
-                } else {
+                } else { // action === 'login'
                     localStorage.setItem('slotchain_token', data.token);
+                    
+                    // Decode the token to get user info (simple way, no signature check)
                     const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
                     currentUser = { email: decodedToken.email, name: email.split('@')[0] }; 
                     localStorage.setItem('slotchain_user', JSON.stringify(currentUser));
+                    
                     updateAuthUI();
                     hideAuthModal();
                     showNotification('Logged in successfully!');
