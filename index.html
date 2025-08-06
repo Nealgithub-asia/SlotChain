@@ -546,37 +546,9 @@
                 
                 <div class="flex space-x-4">
                     <button id="backToBooking" class="flex-1 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 transition duration-300">Back</button>
-                    <!-- --- MODIFIED: Changed button text --- -->
-                    <button id="proceedToCheckoutBtn" class="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Proceed to Checkout</button>
+                    <button id="confirmBooking" class="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Confirm Booking</button>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- --- NEW: Card Payment Modal --- -->
-    <div id="cardPaymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
-             <button id="closeCardModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times"></i>
-            </button>
-            <h3 class="text-xl font-bold text-gray-900 mb-6">Enter Card Details</h3>
-            <form id="cardPaymentForm">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
-                    <input type="text" placeholder="0000 0000 0000 0000" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
-                        <input type="text" placeholder="MM/YY" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
-                    </div>
-                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">CVC</label>
-                        <input type="text" placeholder="123" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">Pay Now (Demo)</button>
-            </form>
         </div>
     </div>
 
@@ -811,28 +783,12 @@
         
         const AUTH_API_URL = '/api/auth'; 
         const BOOKINGS_API_URL = '/api/bookings';
-        const NFT_API_URL = '/api/nfts';
-
-        // --- NEW: HashConnect State ---
-        let hashconnect = new HashConnect();
-        let appMetadata = {
-            name: "SlotChain",
-            description: "A grooming booking application",
-            icon: "https://slotchain.vercel.app/favicon.ico" // You should create a favicon for your site
-        };
-        let hederaState = {
-            topic: "",
-            pairingString: "",
-            privateKey: null,
-            pairedWalletData: null,
-            pairedAccounts: [],
-        };
 
         // Application State
         let currentUser = null;
         let selectedStation = null;
         let selectedSlot = null;
-        let bookings = [];
+        let bookings = []; // **FIX**: We will now fetch this from the server
         let nftCollection = JSON.parse(localStorage.getItem('slotchain_nfts') || '[]');
 
         let chatbotOpen = false;
@@ -851,140 +807,12 @@
             "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
         ];
         
-        // --- NEW: Initialize HashConnect ---
-        async function initHashConnect() {
-            // Setup event listeners
-            hashconnect.pairingEvent.on((pairingData) => {
-                hederaState.pairedWalletData = pairingData.metadata;
-                hederaState.pairedAccounts = pairingData.accountIds;
-                updateWalletUI();
-            });
-
-            hashconnect.connectionStatusChangeEvent.on((connectionStatus) => {
-                console.log("HashConnect connection status change:", connectionStatus);
-                if (connectionStatus === "Disconnected") {
-                    hederaState.pairedAccounts = [];
-                    updateWalletUI();
-                }
-            });
-
-            // Initialize and connect
-            let initData = await hashconnect.init(appMetadata, "testnet", false);
-            hederaState.topic = initData.topic;
-            hederaState.pairingString = initData.pairingString;
-
-            // Connect to a previously paired wallet, if available
-            hashconnect.connectToLocalWallet();
-        }
-
-        // --- NEW: Connect Wallet Function ---
-        function connectWallet() {
-            if (hederaState.pairedAccounts.length > 0) {
-                hashconnect.disconnect(hederaState.topic);
-                hederaState.pairedAccounts = [];
-                updateWalletUI();
-                return;
-            }
-            // This will open a new tab with the pairing string, which HashPack will recognize
-            hashconnect.openPairingModal();
-        }
-
-        // --- NEW: Update Wallet UI ---
-        function updateWalletUI() {
-            const connectBtn = document.getElementById('connectWalletBtn');
-            const walletInfo = document.getElementById('walletInfo');
-            const accountIdSpan = document.getElementById('accountId');
-
-            if (hederaState.pairedAccounts.length > 0) {
-                connectBtn.textContent = 'Disconnect';
-                connectBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
-                connectBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
-                walletInfo.classList.remove('hidden');
-                accountIdSpan.textContent = hederaState.pairedAccounts[0];
-            } else {
-                connectBtn.textContent = 'Connect Wallet';
-                connectBtn.classList.add('bg-purple-600', 'hover:bg-purple-700');
-                connectBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-                walletInfo.classList.add('hidden');
-                accountIdSpan.textContent = '';
-            }
-        }
-
-        // --- NEW: Handle Checkout Flow ---
-        function proceedToCheckout() {
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-            if (!paymentMethod) {
-                showNotification('Please select a payment method', 'error');
-                return;
-            }
-
-            if (paymentMethod.value === 'hedera') {
-                handleHbarPayment();
-            } else {
-                handleCardPayment();
-            }
-        }
-
-        // --- NEW: HBAR Payment Logic ---
-        async function handleHbarPayment() {
-            if (hederaState.pairedAccounts.length === 0) {
-                showNotification('Please connect your HashPack wallet first.', 'error');
-                connectWallet();
-                return;
-            }
-
-            const totalAmountText = document.getElementById('totalAmount').textContent;
-            const amount = parseFloat(totalAmountText.replace('$', '')); // Ensure it's a number
-            const stationWallet = selectedStation.walletAddress; // Make sure stations have a walletAddress property
-
-            if (!stationWallet) {
-                showNotification('This station is not set up to receive HBAR payments.', 'error');
-                return;
-            }
-
-            const provider = hashconnect.getProvider("testnet", hederaState.topic, hederaState.pairedAccounts[0]);
-            const signer = hashconnect.getSigner(provider);
-
-            try {
-                const tx = await new hedera.TransferTransaction()
-                    .addHbarTransfer(hederaState.pairedAccounts[0], -amount)
-                    .addHbarTransfer(stationWallet, amount)
-                    .freezeWith(signer.client);
-
-                const signedTx = await signer.signTransaction(tx);
-                const response = await signer.call(signedTx);
-                
-                showNotification('HBAR Payment Successful!', 'success');
-                // After successful payment, confirm the booking in our database
-                await confirmBookingOnServer('hedera');
-
-            } catch (error) {
-                console.error("HBAR Payment Error:", error);
-                showNotification('HBAR payment failed or was rejected.', 'error');
-            }
-        }
-
-        // --- NEW: Card Payment Logic ---
-        function handleCardPayment() {
-            document.getElementById('cardPaymentModal').classList.remove('hidden');
-        }
-
-        async function processCardPayment(e) {
-            e.preventDefault();
-            // This is a demo, so we just simulate a delay and success
-            showNotification('Processing card payment...', 'info');
-            setTimeout(async () => {
-                document.getElementById('cardPaymentModal').classList.add('hidden');
-                showNotification('Card payment successful (Demo)!', 'success');
-                await confirmBookingOnServer('card');
-            }, 2000);
-        }
-        
         async function handleAuth(e) {
             e.preventDefault();
             const mode = document.getElementById('authModal').dataset.mode;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            
             const action = mode === 'signup' ? 'register' : 'login';
 
             try {
@@ -993,8 +821,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action, email, password }),
                 });
+
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Something went wrong');
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Something went wrong');
+                }
 
                 if (action === 'register') {
                     showNotification('Account created successfully! Please log in.');
@@ -1008,18 +840,31 @@
                     hideAuthModal();
                     showNotification('Logged in successfully!');
                 }
+
             } catch (error) {
                 console.error('Authentication Error:', error);
                 showNotification(error.message, 'error');
             }
         }
 
-        // --- MODIFIED: Renamed to confirmBookingOnServer ---
-        async function confirmBookingOnServer(paymentMethodValue) {
+        // **FIX**: Updated confirmBooking to send data to the server
+        async function confirmBooking() {
             const service = document.getElementById('serviceSelect');
             const selectedOption = service.options[service.selectedIndex];
             const date = document.getElementById('bookingDate').value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
             const token = localStorage.getItem('slotchain_token');
+
+            if (!paymentMethod) {
+                showNotification('Please select a payment method', 'error');
+                return;
+            }
+             if (!token) {
+                showNotification('You must be logged in to book.', 'error');
+                showAuthModal('login');
+                return;
+            }
+            
             const totalAmountText = document.getElementById('totalAmount').textContent;
             const amount = totalAmountText.replace('$', '');
             
@@ -1031,7 +876,7 @@
                 date: date,
                 time: selectedSlot,
                 amount: amount,
-                paymentMethod: paymentMethodValue,
+                paymentMethod: paymentMethod.value,
             };
 
             try {
@@ -1043,68 +888,44 @@
                     },
                     body: JSON.stringify(bookingData),
                 });
+
                 const newBooking = await response.json();
-                if (!response.ok) throw new Error(newBooking.error || 'Failed to create booking.');
+
+                if (!response.ok) {
+                    throw new Error(newBooking.error || 'Failed to create booking.');
+                }
                 
-                if (paymentMethodValue === 'hedera') {
-                    // --- NEW: Mint and transfer NFT after successful booking ---
-                    await mintAndTransferNFT(newBooking);
+                if (paymentMethod.value === 'hedera') {
+                    const nft = { id: Date.now(), number: document.getElementById('nftNumber').textContent, service: service.value, date: date, rarity: Math.random() > 0.7 ? 'rare' : 'common', createdAt: new Date().toISOString() };
+                    nftCollection.push(nft);
+                    localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
                 }
                 
                 hideBookingModal();
                 showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
+
             } catch (error) {
                 console.error('Booking Error:', error);
                 showNotification(error.message, 'error');
             }
         }
-        
-        // --- NEW: Mint and Transfer NFT Logic ---
-        async function mintAndTransferNFT(bookingDetails) {
-            const token = localStorage.getItem('slotchain_token');
-            const userAccountId = hederaState.pairedAccounts[0];
-            if (!token || !userAccountId) return;
 
-            try {
-                showNotification('Minting your exclusive NFT...', 'info');
-                const response = await fetch(`${NFT_API_URL}/mint`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        bookingId: bookingDetails._id, // Send booking ID for metadata
-                        recipientAccountId: userAccountId
-                    })
-                });
-
-                const nftData = await response.json();
-                if (!response.ok) throw new Error(nftData.error || 'NFT minting failed.');
-
-                showNotification(`NFT Minted! Token ID: ${nftData.tokenId}. Check your wallet!`, 'success');
-                // You might want to add the NFT to a local list to display in the dashboard immediately
-                nftCollection.push({ id: nftData.tokenId, number: nftData.serial, service: bookingDetails.service, date: bookingDetails.date });
-                localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
-
-            } catch (error) {
-                console.error("NFT Minting/Transfer Error:", error);
-                showNotification(error.message, 'error');
-            }
-        }
-
-
+        // **FIX**: Updated loadDashboardData to fetch from the server
         async function loadDashboardData() {
             const token = localStorage.getItem('slotchain_token');
             if (!token) return;
 
             try {
                 const response = await fetch(BOOKINGS_API_URL, {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
                 const serverBookings = await response.json();
-                if (!response.ok) throw new Error(serverBookings.error || 'Could not fetch bookings.');
-                bookings = serverBookings;
+                if (!response.ok) {
+                    throw new Error(serverBookings.error || 'Could not fetch bookings.');
+                }
+                bookings = serverBookings; // Replace local bookings with server data
                 loadUpcomingBookings();
                 loadBookingHistory();
                 loadNFTCollection();
@@ -1116,7 +937,7 @@
 
         function logout() {
             currentUser = null;
-            bookings = [];
+            bookings = []; // Clear bookings on logout
             localStorage.removeItem('slotchain_token');
             localStorage.removeItem('slotchain_user');
             updateAuthUI();
@@ -1169,7 +990,6 @@
         window.addEventListener('load', function() {
             initMap();
             initializeDummyStations();
-            initHashConnect(); // --- NEW: Initialize HashConnect on load
         });
         
         function initializeDummyStations() {
@@ -1181,7 +1001,7 @@
                     address: '123 MG Road, Koramangala, Bengaluru, Karnataka',
                     phone: '(080) 123-4567',
                     email: 'contact@royalcuts.com',
-                    walletAddress: '0.0.123456', // Example wallet address
+                    walletAddress: '0.0.123456',
                     services: ['haircut', 'beard-trim', 'styling', 'full-service'],
                     features: ['wifi', 'parking', 'premium-products', 'massage-chairs'],
                     rating: 4.8,
@@ -1260,13 +1080,8 @@
             document.getElementById('bookingDate').addEventListener('change', loadTimeSlots);
             document.getElementById('nextToPayment').addEventListener('click', showPaymentStep);
             document.getElementById('backToBooking').addEventListener('click', showBookingStep);
-            // --- MODIFIED: Event listener for new checkout button ---
-            document.getElementById('proceedToCheckoutBtn').addEventListener('click', proceedToCheckout);
+            document.getElementById('confirmBooking').addEventListener('click', confirmBooking);
             document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => { radio.addEventListener('change', handlePaymentMethodChange); });
-            // --- NEW: Event listeners for wallet and card payment ---
-            document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
-            document.getElementById('cardPaymentForm').addEventListener('submit', processCardPayment);
-            document.getElementById('closeCardModal').addEventListener('click', () => document.getElementById('cardPaymentModal').classList.add('hidden'));
             loadTimeSlots();
         }
 
