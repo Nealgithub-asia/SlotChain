@@ -1873,10 +1873,7 @@
             hideBookingModal();
             showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
             
-            // Send email notification (simulated)
-            setTimeout(() => {
-                showNotification('Confirmation email sent!', 'info');
-            }, 2000);
+            
         }
 
         function showDashboard() {

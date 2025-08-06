@@ -1,21 +1,43 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
+const jwt =require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
-const cors = require('cors'); // Import cors
+const cors = require('cors');
 
 dotenv.config();
 const app = express();
 
 // --- Middleware Setup ---
-app.use(cors()); // Use CORS to allow requests
-app.use(express.json()); // Use express.json() to parse request bodies
+app.use(cors());
+app.use(express.json());
 
 // --- Database Connection ---
-// This connection should be handled carefully in a serverless environment.
-// This approach is okay for now but might be optimized later.
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// This connects to the database when the API is first called
+// and reuses the connection for subsequent calls.
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
+  return mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+};
+
+// --- Main Handler Function ---
+// This function will run for every request to /api/auth/*
+const main = async (req, res) => {
+    try {
+        await connectDB();
+    } catch (e) {
+        console.error('Database connection failed!', e);
+        return res.status(500).json({ error: "Server error: Could not connect to database." });
+    }
+    // This passes the request to the express app
+    return app(req, res);
+};
+
 
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -23,17 +45,16 @@ const UserSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'admin'], default: 'user' }
 });
 
-// Avoid redefining the model, which can cause errors in serverless functions
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 // --- Route Handlers ---
-
-// Register route (accessible at /api/auth/register)
-app.post('/register', async (req, res) => {
+// These routes are relative to the file path.
+// Vercel knows that a request to /api/auth/register should run this.
+app.post('/api/auth/register', async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required.' });
+      return res.status(400).json({ error: 'Email and password are required.' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ email, password: hashedPassword });
@@ -41,16 +62,14 @@ app.post('/register', async (req, res) => {
     res.status(201).json({ message: 'User registered successfully.' });
   } catch (error) {
     console.error("Registration Error:", error);
-    // Check for duplicate key error
     if (error.code === 11000) {
-        return res.status(409).json({ error: 'An account with this email already exists.' });
+      return res.status(409).json({ error: 'An account with this email already exists.' });
     }
     res.status(500).json({ error: 'An error occurred during registration.' });
   }
 });
 
-// Login route (accessible at /api/auth/login)
-app.post('/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -65,4 +84,5 @@ app.post('/login', async (req, res) => {
   }
 });
 
-module.exports = app;
+// Export the main handler function for Vercel
+module.exports = main;
