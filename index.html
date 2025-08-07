@@ -3,8 +3,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SlotChain - Book Your Grooming Station</title>
-    <!-- --- NEW: Added SVG icon for the browser tab --- -->
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="%23f97316"><path d="M192 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V47.4L32.4 141.3C12.7 153.1 0 174.4 0 198.3V208c0 35.3 28.7 64 64 64H224c35.3 0 64-28.7 64-64V198.3c0-23.9-12.7-45.2-32.4-57L192 47.4V32zM224 224H64c-8.8 0-16-7.2-16-16s7.2-16 16-16H224c8.8 0 16 7.2 16 16s-7.2 16-16 16zM128 96a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM288 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM416 224H320c-8.8 0-16-7.2-16-16s7.2-16 16-16h96c8.8 0 16 7.2 16 16s-7.2 16-16 16zM480 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V47.4l-99.6 93.9c-19.7 11.8-32.4 33.1-32.4 57V208c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V198.3c0-23.9-12.7-45.2-32.4-57L480 47.4V32z"/></svg>'>
+    <!-- --- MODIFIED: Favicon updated to the new image --- -->
+    <link rel="icon" href="http://googleusercontent.com/file_content/2" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -562,13 +562,14 @@
             <button id="closeCryptoModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
             <h3 class="text-xl font-bold text-gray-900 mb-4">Select a Cryptocurrency</h3>
             <div id="cryptoOptions" class="space-y-3 mb-6">
-                <button onclick="handleGenericCryptoPayment('ETH')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100">
+                <!-- --- MODIFIED: Added dark mode hover styles --- -->
+                <button onclick="handleGenericCryptoPayment('ETH')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                     <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029" class="h-6 w-6 mr-3" alt="ETH"> Ethereum (ETH)
                 </button>
-                <button onclick="handleGenericCryptoPayment('SOL')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100">
+                <button onclick="handleGenericCryptoPayment('SOL')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                     <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=029" class="h-6 w-6 mr-3" alt="SOL"> Solana (SOL)
                 </button>
-                <button onclick="handleGenericCryptoPayment('TON')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100">
+                <button onclick="handleGenericCryptoPayment('TON')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                     <img src="https://cryptologos.cc/logos/toncoin-ton-logo.svg?v=029" class="h-6 w-6 mr-3" alt="TON"> Toncoin (TON)
                 </button>
             </div>
@@ -822,7 +823,7 @@
         const AUTH_API_URL = '/api/auth'; 
         const BOOKINGS_API_URL = '/api/bookings';
         const NFT_API_URL = '/api/nfts';
-        const CRYPTO_PAYMENT_API_URL = '/api/crypto-payment';
+        const CRYPTO_PAYMENT_API_URL = '/api/generic-crypto';
 
         // --- HashConnect State ---
         let hashconnect;
