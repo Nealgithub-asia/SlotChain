@@ -1,4 +1,4 @@
-Website: (SlotChain)[https://slotchain.vercel.app/]
+Website: [SlotChain](https://slotchain.vercel.app/)
 
 ### **Primary Contact name and Telegram Handle**:
 Thushar Kumar (@NotThushar), Anshuman Singh (@nealzballing), Harshit Chandak (@Dedsec888)
