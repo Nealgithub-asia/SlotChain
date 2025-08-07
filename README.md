@@ -1,13 +1,14 @@
 ### **Primary Contact name and Telegram Handle**
+* Thushar Kumar (@NotThushar)
 * Harshit Chandak (@Dedsec888)
 * Anshuman Singh (@nealzballing)
-* Thushar Kumar (@NotThushar)
 
 ### **Team name**
 HAT
 
 ### **Project Title**
-SlotChain
+SlotChain 
+(https://slotchain.vercel.app/)
 
 ### **One-Sentence Elevator Pitch**
 Our website, SlotChain, solves India's frustrating salon booking problem while making cryptocurrency a practical and simple part of daily life.
@@ -22,13 +23,6 @@ Core features of the platform include:
 * **NFT Rewards:** To incentivize the adoption of cryptocurrency, every transaction completed using HBAR rewards the user with a unique, collectible Non-Fungible Token (NFT), which is then displayed in their personal dashboard.
 
 The platform is built on a modern technology stack. The frontend was developed using HTML, TailwindCSS, and JavaScript to ensure a responsive and clean user interface. The backend relies on a secure authentication system with JSON Web Tokens (JWTs) for user management and MongoDB for data persistence.
-
-### **Install steps (if any)**
-To set up and run the project locally, you would follow these steps:
-1.  **Clone the repository:** Download the project files to your local machine.
-2.  **Install dependencies:** Navigate to the project's root directory in your terminal and run `npm install`. This will install all the required packages listed in the `package.json` file.
-3.  **Set up environment variables:** Create a `.env` file in the root directory and populate it with the necessary keys.
-4.  **Start the server:** Run the command `npm start` in the terminal.
 
 ### **Environment variables**
 The application requires the following environment variables to be set up in a `.env` file for full functionality:
