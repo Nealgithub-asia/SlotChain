@@ -3,7 +3,7 @@
 * Anshuman Singh (@nealzballing)
 * Thushar Kumar (@NotThushar)
 
-### **Team name (or write Solo)**
+### **Team name**
 HAT
 
 ### **Project Title**
