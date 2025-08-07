@@ -562,15 +562,15 @@
             <button id="closeCryptoModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
             <h3 class="text-xl font-bold text-gray-900 mb-4">Select a Cryptocurrency</h3>
             <div id="cryptoOptions" class="space-y-3 mb-6">
-                <!-- --- MODIFIED: Added dark mode hover styles --- -->
-                <button onclick="handleGenericCryptoPayment('ETH')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029" class="h-6 w-6 mr-3" alt="ETH"> Ethereum (ETH)
+                <!-- --- MODIFIED: Added dark mode hover styles and fixed logo visibility --- -->
+                <button onclick="handleGenericCryptoPayment('ETH')" class="w-full flex items-center p-3 border rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=029" class="h-6 w-6 mr-3" alt="ETH" loading="lazy"> Ethereum (ETH)
                 </button>
-                <button onclick="handleGenericCryptoPayment('SOL')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=029" class="h-6 w-6 mr-3" alt="SOL"> Solana (SOL)
+                <button onclick="handleGenericCryptoPayment('SOL')" class="w-full flex items-center p-3 border rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <img src="https://cryptologos.cc/logos/solana-sol-logo.svg?v=029" class="h-6 w-6 mr-3" alt="SOL" loading="lazy"> Solana (SOL)
                 </button>
-                <button onclick="handleGenericCryptoPayment('TON')" class="w-full flex items-center p-3 border rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <img src="https://cryptologos.cc/logos/toncoin-ton-logo.svg?v=029" class="h-6 w-6 mr-3" alt="TON"> Toncoin (TON)
+                <button onclick="handleGenericCryptoPayment('TON')" class="w-full flex items-center p-3 border rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <img src="https://cryptologos.cc/logos/toncoin-ton-logo.svg?v=029" class="h-6 w-6 mr-3" alt="TON" loading="lazy"> Toncoin (TON)
                 </button>
             </div>
             <div id="cryptoPaymentDetails" class="hidden">
@@ -823,7 +823,7 @@
         const AUTH_API_URL = '/api/auth'; 
         const BOOKINGS_API_URL = '/api/bookings';
         const NFT_API_URL = '/api/nfts';
-        const CRYPTO_PAYMENT_API_URL = '/api/generic-crypto';
+        const CRYPTO_PAYMENT_API_URL = '/api/crypto-payment';
 
         // --- HashConnect State ---
         let hashconnect;
