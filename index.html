@@ -3,15 +3,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SlotChain - Book Your Grooming Station</title>
-    <!-- --- MODIFIED: Favicon updated to the new image using a Base64 URI --- -->
+    <!-- --- MODIFIED: Favicon updated to the new image --- -->
     <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- --- MODIFIED: Added defer to ensure scripts load before execution --- -->
-    <script src="https://unpkg.com/hashconnect@2.1.1/dist/hashconnect.js" defer></script>
-    <script src="https://unpkg.com/@hashgraph/sdk@2.19.0/umd.js" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
@@ -199,11 +196,6 @@
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <!-- --- NEW: Wallet Connect Button --- -->
-                    <button id="connectWalletBtn" class="bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700">Connect Wallet</button>
-                    <div id="walletInfo" class="hidden text-sm text-gray-600">
-                        Connected: <span id="accountId" class="font-semibold"></span>
-                    </div>
                     <button id="setupStationBtn" class="text-orange-500 hover:text-orange-600 px-3 py-2 rounded-md text-sm font-medium flex items-center">
                         <i class="fas fa-store mr-2"></i>
                         Setup Station
@@ -575,6 +567,20 @@
         </div>
     </div>
 
+    <!-- --- NEW: NOWPayments Modal --- -->
+    <div id="nowPaymentsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 relative">
+            <button id="closeNowPaymentsModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Complete Your Payment</h3>
+            <p class="text-gray-600 mb-6">Your booking is pending. Please complete your payment using the widget below to confirm your appointment.</p>
+            <div class="w-full h-[700px]">
+                <iframe id="nowPaymentsWidget" src="https://nowpayments.io/embeds/payment-widget?iid=4388270196" width="410" height="696" frameborder="0" scrolling="no" style="overflow-y: hidden;">
+                    Can't load widget
+                </iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- Station Setup Modal -->
     <div id="stationSetupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto relative">
@@ -850,11 +856,25 @@
         
         // --- MODIFIED: Changed to window.onload to ensure all scripts are loaded ---
         window.addEventListener('load', function() {
+            // --- NEW: Robustly wait for HashConnect to be available ---
+            const checkInterval = setInterval(() => {
+                if (typeof HashConnect !== 'undefined') {
+                    clearInterval(checkInterval);
+                    initializeApp();
+                }
+            }, 100);
+        });
+
+        function initializeApp() {
             initHashConnect();
-            initializeApp();
             setupEventListeners();
             checkAuthState();
-        });
+            initMap();
+            initializeDummyStations();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+            document.getElementById('bookingDate').value = today;
+        }
         
         async function initHashConnect() {
             try {
@@ -940,37 +960,8 @@
         }
 
         async function handleHbarPayment() {
-            if (hederaState.pairedAccounts.length === 0) {
-                showNotification('Please connect your HashPack wallet first.', 'error');
-                connectWallet();
-                return;
-            }
-
-            const totalAmountText = document.getElementById('totalAmount').textContent;
-            const amount = parseFloat(totalAmountText.replace('$', ''));
-            const stationWallet = selectedStation.walletAddress;
-
-            if (!stationWallet) {
-                showNotification('This station is not set up to receive HBAR payments.', 'error');
-                return;
-            }
-
-            const provider = hashconnect.getProvider("testnet", hederaState.topic, hederaState.pairedAccounts[0]);
-            const signer = hashconnect.getSigner(provider);
-            
-            const tx = await new hedera.TransferTransaction()
-                .addHbarTransfer(hederaState.pairedAccounts[0], -amount)
-                .addHbarTransfer(stationWallet, amount)
-                .freezeWithSigner(signer);
-
-            try {
-                const response = await tx.executeWithSigner(signer);
-                showNotification('HBAR Payment Successful!', 'success');
-                await confirmBookingOnServer('hedera');
-            } catch (error) {
-                console.error("HBAR Payment Error:", error);
-                showNotification('HBAR payment failed or was rejected.', 'error');
-            }
+            await confirmBookingOnServer('hedera', 'pending');
+            document.getElementById('nowPaymentsModal').classList.remove('hidden');
         }
 
         function handleCardPayment() {
@@ -983,12 +974,12 @@
             setTimeout(async () => {
                 document.getElementById('cardPaymentModal').classList.add('hidden');
                 showNotification('Card payment successful (Demo)!', 'success');
-                await confirmBookingOnServer('card');
+                await confirmBookingOnServer('card', 'confirmed');
             }, 2000);
         }
 
         async function handleCryptoPayment() {
-            await confirmBookingOnServer('crypto');
+            await confirmBookingOnServer('crypto', 'pending');
             window.open('https://nowpayments.io/payment/?iid=5799803578', '_blank');
         }
         
@@ -1026,7 +1017,7 @@
             }
         }
 
-        async function confirmBookingOnServer(paymentMethodValue) {
+        async function confirmBookingOnServer(paymentMethodValue, status = 'confirmed') {
             const service = document.getElementById('serviceSelect');
             const selectedOption = service.options[service.selectedIndex];
             const date = document.getElementById('bookingDate').value;
@@ -1043,6 +1034,7 @@
                 time: selectedSlot,
                 amount: amount,
                 paymentMethod: paymentMethodValue,
+                status: status,
             };
 
             try {
@@ -1057,12 +1049,11 @@
                 const newBooking = await response.json();
                 if (!response.ok) throw new Error(newBooking.error || 'Failed to create booking.');
                 
-                if (paymentMethodValue === 'hedera') {
-                    await mintAndTransferNFT(newBooking);
+                if (status === 'confirmed') {
+                    hideBookingModal();
+                    showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
                 }
                 
-                hideBookingModal();
-                showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
             } catch (error) {
                 console.error('Booking Error:', error);
                 showNotification(error.message, 'error');
@@ -1218,14 +1209,6 @@
             }
         }
 
-        function initializeApp() {
-            initMap();
-            initializeDummyStations();
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('bookingDate').min = today;
-            document.getElementById('bookingDate').value = today;
-        }
-
         function setupEventListeners() {
             document.getElementById('loginBtn').addEventListener('click', () => showAuthModal('login'));
             document.getElementById('signupBtn').addEventListener('click', () => showAuthModal('signup'));
@@ -1268,6 +1251,7 @@
                 document.execCommand('copy');
                 showNotification('Pairing string copied!', 'info');
             });
+            document.getElementById('closeNowPaymentsModal').addEventListener('click', () => document.getElementById('nowPaymentsModal').classList.add('hidden'));
             loadTimeSlots();
         }
 
