@@ -17,7 +17,6 @@ const connectDB = async () => {
 };
 
 // --- Mongoose Schemas ---
-// We need to define the User model here as well to link bookings to users.
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -25,7 +24,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 const BookingSchema = new mongoose.Schema({
-  stationId: { type: String, required: true }, // Using String for simplicity with demo data
+  stationId: { type: String, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   stationName: String,
   stationAddress: String,
@@ -34,14 +33,14 @@ const BookingSchema = new mongoose.Schema({
   time: String,
   amount: String,
   paymentMethod: String,
-  status: { type: String, enum: ['confirmed', 'cancelled'], default: 'confirmed' },
+  status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'confirmed' },
   createdAt: { type: Date, default: Date.now }
 });
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Booking = mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
 
-// --- Auth Middleware ---
+// --- Auth Middleware (FIXED) ---
 // This function checks for a valid JWT in the request headers.
 const auth = (handler) => async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -57,6 +56,7 @@ const auth = (handler) => async (req, res) => {
   }
 };
 
+
 // --- Main Serverless Function ---
 module.exports = async (req, res) => {
   const corsMiddleware = cors();
@@ -71,10 +71,27 @@ module.exports = async (req, res) => {
     await connectDB();
 
     // Route to CREATE a new booking
-    if (req.method === 'POST' && req.url === '/api/bookings') {
+    if (req.method === 'POST') {
         // This is a protected route, so we wrap it with our auth middleware
         return auth(async (req, res) => {
-            const { stationId, stationName, stationAddress, service, date, time, amount, paymentMethod } = req.body;
+            // --- NEW: Handle status updates ---
+            if (req.body.action === 'updateStatus') {
+                const { bookingId, status } = req.body;
+                const booking = await Booking.findById(bookingId);
+                if (!booking) {
+                    return res.status(404).json({ error: 'Booking not found.' });
+                }
+                // Ensure the user owns this booking
+                if (booking.userId.toString() !== req.user.id) {
+                    return res.status(403).json({ error: 'Forbidden' });
+                }
+                booking.status = status;
+                await booking.save();
+                return res.status(200).json(booking);
+            }
+
+            // --- Original booking creation logic ---
+            const { stationId, stationName, stationAddress, service, date, time, amount, paymentMethod, status } = req.body;
             const booking = new Booking({
                 stationId,
                 userId: req.user.id,
@@ -85,24 +102,26 @@ module.exports = async (req, res) => {
                 time,
                 amount,
                 paymentMethod,
-                status: 'confirmed'
+                status: status || 'confirmed' // Default to confirmed if not provided
             });
             await booking.save();
             res.status(201).json(booking);
         })(req, res);
     }
 
+
     // Route to GET all bookings for the logged-in user
-    if (req.method === 'GET' && req.url === '/api/bookings') {
+    if (req.method === 'GET') {
         // This is also a protected route
         return auth(async (req, res) => {
             const bookings = await Booking.find({ userId: req.user.id }).sort({ createdAt: -1 });
             res.status(200).json(bookings);
         })(req, res);
     }
-    
+
     // If no route matches
-    res.status(404).json({ error: 'Route not found.' });
+    res.setHeader('Allow', ['POST', 'GET']);
+    res.status(405).json({ error: `Method ${req.method} Not Allowed` });
 
   } catch (error) {
     console.error('[API_BOOKINGS_ERROR]', error);
