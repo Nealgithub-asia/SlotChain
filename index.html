@@ -548,25 +548,6 @@
         </div>
     </div>
 
-    <!-- --- NEW: Wallet Connect Modal --- -->
-    <div id="walletConnectModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
-            <button id="closeWalletConnectModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Connect HashPack Wallet</h3>
-            <p class="text-gray-600 mb-6">Scan the QR code with your HashPack app or copy the pairing string to connect your wallet.</p>
-            <div class="flex justify-center mb-4">
-                <div id="qrCodeContainer" class="p-2 border rounded-lg"></div>
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Pairing String</label>
-                <div class="flex">
-                    <input type="text" id="pairingString" readonly class="flex-1 bg-gray-100 px-3 py-2 border border-gray-300 rounded-l-md">
-                    <button id="copyPairingString" class="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700">Copy</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- --- NEW: NOWPayments Modal --- -->
     <div id="nowPaymentsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 relative">
@@ -813,23 +794,6 @@
         const AUTH_API_URL = '/api/auth'; 
         const BOOKINGS_API_URL = '/api/bookings';
         const NFT_API_URL = '/api/nfts';
-        const CRYPTO_PAYMENT_API_URL = '/api/crypto-payment';
-
-        // --- HashConnect State ---
-        let hashconnect;
-        let isHashConnectReady = false;
-        let appMetadata = {
-            name: "SlotChain",
-            description: "A grooming booking application",
-            icon: "https://slotchain.vercel.app/favicon.ico"
-        };
-        let hederaState = {
-            topic: "",
-            pairingString: "",
-            privateKey: null,
-            pairedWalletData: null,
-            pairedAccounts: [],
-        };
 
         // Application State
         let currentUser = null;
@@ -856,17 +820,10 @@
         
         // --- MODIFIED: Changed to window.onload to ensure all scripts are loaded ---
         window.addEventListener('load', function() {
-            // --- NEW: Robustly wait for HashConnect to be available ---
-            const checkInterval = setInterval(() => {
-                if (typeof HashConnect !== 'undefined') {
-                    clearInterval(checkInterval);
-                    initializeApp();
-                }
-            }, 100);
+            initializeApp();
         });
 
         function initializeApp() {
-            initHashConnect();
             setupEventListeners();
             checkAuthState();
             initMap();
@@ -876,73 +833,6 @@
             document.getElementById('bookingDate').value = today;
         }
         
-        async function initHashConnect() {
-            try {
-                hashconnect = new HashConnect();
-
-                hashconnect.pairingEvent.on((pairingData) => {
-                    hederaState.pairedWalletData = pairingData.metadata;
-                    hederaState.pairedAccounts = pairingData.accountIds;
-                    updateWalletUI();
-                    document.getElementById('walletConnectModal').classList.add('hidden');
-                });
-
-                hashconnect.connectionStatusChangeEvent.on((connectionStatus) => {
-                    console.log("HashConnect connection status change:", connectionStatus);
-                    if (connectionStatus === "Disconnected") {
-                        hederaState.pairedAccounts = [];
-                        updateWalletUI();
-                    }
-                });
-
-                let initData = await hashconnect.init(appMetadata, "testnet", false);
-                hederaState.topic = initData.topic;
-                hederaState.pairingString = initData.pairingString;
-                
-                document.getElementById('pairingString').value = hederaState.pairingString;
-                document.getElementById('qrCodeContainer').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(hederaState.pairingString)}" alt="HashPack QR Code">`;
-
-                isHashConnectReady = true;
-
-                hashconnect.connectToLocalWallet();
-            } catch (error) {
-                console.error("Failed to initialize HashConnect:", error);
-                showNotification("Could not initialize wallet features.", "error");
-            }
-        }
-
-        function connectWallet() {
-            if (!isHashConnectReady) {
-                showNotification('HashConnect is not ready, please wait.', 'error');
-                return;
-            }
-            if (hederaState.pairedAccounts.length > 0) {
-                hashconnect.disconnect(hederaState.topic);
-            } else {
-                document.getElementById('walletConnectModal').classList.remove('hidden');
-            }
-        }
-
-        function updateWalletUI() {
-            const connectBtn = document.getElementById('connectWalletBtn');
-            const walletInfo = document.getElementById('walletInfo');
-            const accountIdSpan = document.getElementById('accountId');
-
-            if (hederaState.pairedAccounts.length > 0) {
-                connectBtn.textContent = 'Disconnect';
-                connectBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
-                connectBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
-                walletInfo.classList.remove('hidden');
-                accountIdSpan.textContent = hederaState.pairedAccounts[0];
-            } else {
-                connectBtn.textContent = 'Connect Wallet';
-                connectBtn.classList.add('bg-purple-600', 'hover:bg-purple-700');
-                connectBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-                walletInfo.classList.add('hidden');
-                accountIdSpan.textContent = '';
-            }
-        }
-
         function proceedToCheckout() {
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
             if (!paymentMethod) {
@@ -1062,8 +952,7 @@
         
         async function mintAndTransferNFT(bookingDetails) {
             const token = localStorage.getItem('slotchain_token');
-            const userAccountId = hederaState.pairedAccounts[0];
-            if (!token || !userAccountId) return;
+            if (!token) return;
 
             try {
                 showNotification('Minting your exclusive NFT...', 'info');
@@ -1075,7 +964,7 @@
                     },
                     body: JSON.stringify({
                         bookingId: bookingDetails._id,
-                        recipientAccountId: userAccountId
+                        recipientAccountId: "0.0.12345" // This needs to be replaced with the user's actual account ID
                     })
                 });
 
@@ -1241,16 +1130,8 @@
             document.getElementById('backToBooking').addEventListener('click', showBookingStep);
             document.getElementById('proceedToCheckoutBtn').addEventListener('click', proceedToCheckout);
             document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => { radio.addEventListener('change', handlePaymentMethodChange); });
-            document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
             document.getElementById('cardPaymentForm').addEventListener('submit', processCardPayment);
             document.getElementById('closeCardModal').addEventListener('click', () => document.getElementById('cardPaymentModal').classList.add('hidden'));
-            document.getElementById('closeWalletConnectModal').addEventListener('click', () => document.getElementById('walletConnectModal').classList.add('hidden'));
-            document.getElementById('copyPairingString').addEventListener('click', () => {
-                const pairingString = document.getElementById('pairingString');
-                pairingString.select();
-                document.execCommand('copy');
-                showNotification('Pairing string copied!', 'info');
-            });
             document.getElementById('closeNowPaymentsModal').addEventListener('click', () => document.getElementById('nowPaymentsModal').classList.add('hidden'));
             loadTimeSlots();
         }
