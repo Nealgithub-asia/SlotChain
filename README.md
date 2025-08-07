@@ -50,7 +50,7 @@ The application requires the following environment variables to be set up in a `
 
     -- HashConnect not initialized:This error was a direct result of the timing issue mentioned above, but it manifested differently. Even if the HashConnect library was loaded, the user could still click the "Connect Wallet" button before our initHashConnect() function had completed its own setup process (which is asynchronous).
 
--- ReferenceError: HashConnect is not defined: The main part of our application's JavaScript code was trying to use the HashConnect library before the browser had finished downloading and loading it from the unpkg.com server
+    -- ReferenceError: HashConnect is not defined: The main part of our application's JavaScript code was trying to use the HashConnect library before the browser had finished downloading and loading it from the unpkg.com server
 * **NFT Minting:** As a result of the payment workaround, the NFT reward system is implemented as a demonstration to show how the NFTs will be stored and displayed in the user's dashboard.
 * **Location Services:** We encountered issues with the Google API for finding nearby shops, so the platform currently uses a mock data set for demonstration purposes.
 * **Minor UI/Styling Issues**: We encountered a few smaller issues where logos were not displaying correctly, and buttons in the payment modals were not styled properly on hover, especially in dark mode.
