@@ -1,7 +1,7 @@
 Website: [SlotChain](https://slotchain.vercel.app/)
 
 ### **Primary Contact name and Telegram Handle**:
-Thushar Kumar (@NotThushar), Anshuman Singh (@nealzballing), Harshit Chandak (@Dedsec888)
+Thushar Kumar (@NotThushar); Anshuman Singh (@nealzballing); Harshit Chandak (@Dedsec888)
 
 ### **Team name (or write Solo)**
 HAT
@@ -10,7 +10,7 @@ HAT
 SlotChain
 
 ### **One-Sentence Elevator Pitch**
-Our website, SlotChain, solves India's frustrating salon booking problem while making cryptocurrency a practical and simple part of daily life.
+SlotChain solves India's frustrating salon booking problem by making cryptocurrency a practical and simple part of daily life.
 
 ### **Detailed project description**
 SlotChain is a full-stack web application designed to modernize the personal care industry by providing a centralized, online booking system for barbershops and salons. The platform, accessible at [slotchain.vercel.app](https://slotchain.vercel.app/), addresses the common inefficiency of walk-in appointments by allowing users to seamlessly find, book, and pay for grooming services in advance.
