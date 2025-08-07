@@ -478,15 +478,15 @@
                                 <div class="text-xs text-purple-700 dark:text-purple-400 mt-1 font-medium">✨ Earn collectible tokens with every booking</div>
                             </div>
                         </label>
-                        <!-- --- NEW: "Pay with Crypto" button --- -->
-                        <label class="flex items-center p-4 border-2 border-orange-400 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-orange-25 to-yellow-25">
+                        <!-- --- MODIFIED: Added dark mode hover styles --- -->
+                        <label class="flex items-center p-4 border-2 border-orange-400 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 dark:hover:from-orange-900/30 dark:hover:to-yellow-900/30 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-orange-25 to-yellow-25">
                             <input type="radio" name="paymentMethod" value="crypto" class="mr-4">
                             <div class="crypto-glossy p-4 rounded-xl relative overflow-hidden">
                                  <i class="fas fa-coins text-white text-2xl"></i>
                             </div>
                             <div class="ml-4 flex-1">
-                                <div class="font-bold text-lg text-gray-900">Other Crypto</div>
-                                <div class="text-sm text-orange-800 font-semibold">Pay with ETH, SOL, TON, and more</div>
+                                <div class="font-bold text-lg text-gray-900 dark:text-white">Other Crypto</div>
+                                <div class="text-sm text-orange-800 dark:text-orange-300 font-semibold">Pay with ETH, SOL, TON, and more</div>
                             </div>
                         </label>
                         <label class="card-payment-option flex items-center p-4 border-2 border-emerald-500 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 dark:hover:from-emerald-900/30 dark:hover:to-green-900/30 hover:border-emerald-600 dark:hover:border-emerald-400 transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-r from-emerald-50/50 to-green-50/50 dark:bg-gradient-to-r dark:from-emerald-900/20 dark:to-green-900/20">
@@ -863,7 +863,8 @@
             "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
         ];
         
-        document.addEventListener('DOMContentLoaded', function() {
+        // --- MODIFIED: Changed to window.onload to ensure all scripts are loaded ---
+        window.addEventListener('load', function() {
             initHashConnect();
             initializeApp();
             setupEventListeners();
