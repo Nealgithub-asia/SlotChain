@@ -801,6 +801,7 @@
         let selectedSlot = null;
         let bookings = [];
         let nftCollection = JSON.parse(localStorage.getItem('slotchain_nfts') || '[]');
+        let currentBookingId = null;
 
         let chatbotOpen = false;
         let map = null;
@@ -850,8 +851,17 @@
         }
 
         async function handleHbarPayment() {
-            await confirmBookingOnServer('hedera', 'pending');
-            document.getElementById('nowPaymentsModal').classList.remove('hidden');
+            const bookingId = await confirmBookingOnServer('hedera', 'pending');
+            if (bookingId) {
+                currentBookingId = bookingId;
+                document.getElementById('nowPaymentsWidget').src = `https://sandbox.nowpayments.io/payment/?iid=4964084809&order_id=${bookingId}`;
+                document.getElementById('nowPaymentsModal').classList.remove('hidden');
+                
+                // --- SIMULATION FOR TESTING ---
+                setTimeout(() => {
+                    simulatePaymentConfirmation(bookingId);
+                }, 10000); // Confirm after 10 seconds
+            }
         }
 
         function handleCardPayment() {
@@ -861,16 +871,26 @@
         async function processCardPayment(e) {
             e.preventDefault();
             showNotification('Processing card payment...', 'info');
+            const bookingId = await confirmBookingOnServer('card', 'pending');
             setTimeout(async () => {
                 document.getElementById('cardPaymentModal').classList.add('hidden');
-                showNotification('Card payment successful (Demo)!', 'success');
-                await confirmBookingOnServer('card', 'confirmed');
+                if (bookingId) {
+                    await updateBookingStatus(bookingId, 'confirmed');
+                    showNotification('Card payment successful!', 'success');
+                }
             }, 2000);
         }
 
         async function handleCryptoPayment() {
-            await confirmBookingOnServer('crypto', 'pending');
-            window.open('https://nowpayments.io/payment/?iid=5799803578', '_blank');
+            const bookingId = await confirmBookingOnServer('crypto', 'pending');
+            if(bookingId) {
+                window.open(`https://nowpayments.io/payment/?iid=5552980381&order_id=${bookingId}`, '_blank');
+                
+                // --- SIMULATION FOR TESTING ---
+                setTimeout(() => {
+                    simulatePaymentConfirmation(bookingId);
+                }, 10000); // Confirm after 10 seconds
+            }
         }
         
         async function handleAuth(e) {
@@ -939,44 +959,43 @@
                 const newBooking = await response.json();
                 if (!response.ok) throw new Error(newBooking.error || 'Failed to create booking.');
                 
-                if (status === 'confirmed') {
-                    hideBookingModal();
-                    showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
-                }
+                hideBookingModal();
+                showNotification(`Booking created! Please complete your payment.`);
+                return newBooking._id; // Return the new booking ID
                 
             } catch (error) {
                 console.error('Booking Error:', error);
                 showNotification(error.message, 'error');
+                return null;
             }
         }
         
-        async function mintAndTransferNFT(bookingDetails) {
-            const token = localStorage.getItem('slotchain_token');
-            if (!token) return;
+        async function simulatePaymentConfirmation(bookingId) {
+             // In a real app, this would be handled by the webhook.
+             // For testing, we manually update the status.
+            await updateBookingStatus(bookingId, 'confirmed');
+            showNotification('Payment confirmed (Simulated)! Your booking is complete.', 'success');
+            document.getElementById('nowPaymentsModal').classList.add('hidden');
+        }
 
+        async function updateBookingStatus(bookingId, status) {
+            const token = localStorage.getItem('slotchain_token');
             try {
-                showNotification('Minting your exclusive NFT...', 'info');
-                const response = await fetch(`${NFT_API_URL}/mint`, {
+                const response = await fetch(BOOKINGS_API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        bookingId: bookingDetails._id,
-                        recipientAccountId: "0.0.12345" // This needs to be replaced with the user's actual account ID
-                    })
+                        action: 'updateStatus',
+                        bookingId: bookingId,
+                        status: status
+                    }),
                 });
-
-                const nftData = await response.json();
-                if (!response.ok) throw new Error(nftData.error || 'NFT minting failed.');
-
-                showNotification(`NFT Minted! Token ID: ${nftData.tokenId}. Check your wallet!`, 'success');
-                nftCollection.push({ id: nftData.tokenId, number: nftData.serial, service: bookingDetails.service, date: bookingDetails.date });
-                localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
-
+                if (!response.ok) throw new Error('Failed to update booking status.');
             } catch (error) {
-                console.error("NFT Minting/Transfer Error:", error);
+                console.error('Update Booking Status Error:', error);
                 showNotification(error.message, 'error');
             }
         }
