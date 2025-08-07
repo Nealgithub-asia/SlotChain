@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SlotChain - Book Your Grooming Station</title>
-    <!-- --- MODIFIED: Favicon updated to the new image using a Base64 URI --- -->
+    <!-- --- MODIFIED: Favicon updated to the new image --- -->
     <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
@@ -556,41 +556,6 @@
         </div>
     </div>
 
-    <!-- --- NEW: Crypto Selection Modal --- -->
-    <div id="cryptoSelectionModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
-            <button id="closeCryptoModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Select a Cryptocurrency</h3>
-            <div id="cryptoOptions" class="space-y-3 mb-6">
-                <!-- --- MODIFIED: Added dark mode hover styles and fixed logo visibility --- -->
-                <button onclick="handleGenericCryptoPayment('ETH')" class="w-full flex items-center p-3 border rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" class="h-6 w-6 mr-3" alt="ETH" loading="lazy"> Ethereum (ETH)
-                </button>
-                <button onclick="handleGenericCryptoPayment('SOL')" class="w-full flex items-center p-3 border rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" class="h-6 w-6 mr-3" alt="SOL" loading="lazy"> Solana (SOL)
-                </button>
-                <button onclick="handleGenericCryptoPayment('TON')" class="w-full flex items-center p-3 border rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" class="h-6 w-6 mr-3" alt="TON" loading="lazy"> Toncoin (TON)
-                </button>
-            </div>
-            <div id="cryptoPaymentDetails" class="hidden">
-                <h4 class="font-semibold mb-2">Send <span id="paymentAmount"></span> <span id="paymentCurrency"></span> to this address:</h4>
-                <div class="bg-gray-100 p-3 rounded-md mb-4">
-                    <p id="paymentAddress" class="text-sm break-all"></p>
-                </div>
-                <!-- In a real app, you would generate a QR code here -->
-                <div class="flex justify-center mb-4">
-                     <div id="qrCodePlaceholder" class="w-40 h-40 bg-gray-200 flex items-center justify-center text-gray-500">QR Code</div>
-                </div>
-                <button id="confirmPaymentBtn" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">I Have Paid</button>
-            </div>
-             <div id="cryptoLoading" class="hidden text-center">
-                <div class="loading-spinner mx-auto" style="border-top-color: #f97316;"></div>
-                <p class="mt-2 text-gray-600">Generating payment address...</p>
-            </div>
-        </div>
-    </div>
-
     <!-- Station Setup Modal -->
     <div id="stationSetupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto relative">
@@ -943,7 +908,7 @@
             if (paymentMethod.value === 'hedera') {
                 handleHbarPayment();
             } else if (paymentMethod.value === 'crypto') {
-                document.getElementById('cryptoSelectionModal').classList.remove('hidden');
+                handleCryptoPayment();
             } else {
                 handleCardPayment();
             }
@@ -997,36 +962,9 @@
             }, 2000);
         }
 
-        async function handleGenericCryptoPayment(currency) {
-            const cryptoOptions = document.getElementById('cryptoOptions');
-            const cryptoLoading = document.getElementById('cryptoLoading');
-            const cryptoDetails = document.getElementById('cryptoPaymentDetails');
-
-            cryptoOptions.classList.add('hidden');
-            cryptoLoading.classList.remove('hidden');
-            cryptoDetails.classList.add('hidden');
-
-            try {
-                const response = await fetch(CRYPTO_PAYMENT_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ amount: 25, currency }),
-                });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Failed to get payment address.');
-
-                document.getElementById('paymentAmount').textContent = data.amount;
-                document.getElementById('paymentCurrency').textContent = data.currency;
-                document.getElementById('paymentAddress').textContent = data.address;
-                
-                cryptoLoading.classList.add('hidden');
-                cryptoDetails.classList.remove('hidden');
-
-            } catch (error) {
-                showNotification(error.message, 'error');
-                cryptoLoading.classList.add('hidden');
-                cryptoOptions.classList.remove('hidden');
-            }
+        async function handleCryptoPayment() {
+            await confirmBookingOnServer('crypto');
+            window.open('https://nowpayments.io/payment/?iid=5799803578', '_blank');
         }
         
         async function handleAuth(e) {
@@ -1298,11 +1236,6 @@
             document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
             document.getElementById('cardPaymentForm').addEventListener('submit', processCardPayment);
             document.getElementById('closeCardModal').addEventListener('click', () => document.getElementById('cardPaymentModal').classList.add('hidden'));
-            document.getElementById('closeCryptoModal').addEventListener('click', () => document.getElementById('cryptoSelectionModal').classList.add('hidden'));
-            document.getElementById('confirmPaymentBtn').addEventListener('click', () => {
-                document.getElementById('cryptoSelectionModal').classList.add('hidden');
-                showNotification('Payment confirmed (demo).', 'success');
-            });
             loadTimeSlots();
         }
 
@@ -1661,11 +1594,7 @@
         }
 
         function getStationPrice(station, serviceType) {
-            const basePrices = { 'haircut': 25, 'beard-trim': 15, 'full-service': 40, 'styling': 30 };
-            const basePrice = basePrices[serviceType] || 25;
-            const priceMultiplier = station.price_level || 2;
-            const adjustedPrice = Math.round(basePrice * (priceMultiplier * 0.8));
-            return adjustedPrice;
+            return 15;
         }
 
         function handlePaymentMethodChange(e) {
