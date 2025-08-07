@@ -861,8 +861,7 @@
             const bookingId = await confirmBookingOnServer('hedera', 'pending');
             if (bookingId) {
                 currentBookingId = bookingId;
-                document.getElementById('nowPaymentsWidget').src = `https://sandbox.nowpayments.io/payment/?iid=4964084809&order_id=${bookingId}`;
-                document.getElementById('nowPaymentsModal').classList.remove('hidden');
+                window.open(`https://sandbox.nowpayments.io/payment/?iid=4910005095&order_id=${bookingId}`, '_blank');
                 
                 // --- SIMULATION FOR TESTING ---
                 setTimeout(() => {
@@ -891,7 +890,8 @@
         async function handleCryptoPayment() {
             const bookingId = await confirmBookingOnServer('crypto', 'pending');
             if(bookingId) {
-                window.open(`https://nowpayments.io/payment/?iid=5552980381&order_id=${bookingId}`, '_blank');
+                document.getElementById('nowPaymentsWidget').src = `https://nowpayments.io/embeds/payment-widget?iid=5552980381&order_id=${bookingId}`;
+                document.getElementById('nowPaymentsModal').classList.remove('hidden');
                 
                 // --- SIMULATION FOR TESTING ---
                 setTimeout(() => {
