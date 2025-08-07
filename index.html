@@ -555,7 +555,7 @@
             <h3 class="text-xl font-bold text-gray-900 mb-4">Complete Your Payment</h3>
             <p class="text-gray-600 mb-6">Your booking is pending. Please complete your payment using the widget below to confirm your appointment.</p>
             <div class="w-full h-[700px]">
-                <iframe id="nowPaymentsWidget" src="https://nowpayments.io/embeds/payment-widget?iid=4388270196" width="410" height="696" frameborder="0" scrolling="no" style="overflow-y: hidden;">
+                <iframe id="nowPaymentsWidget" src="https://nowpayments.io/embeds/payment-widget?iid=5552980381" width="410" height="696" frameborder="0" scrolling="no" style="overflow-y: hidden;">
                     Can't load widget
                 </iframe>
             </div>
@@ -835,6 +835,13 @@
         }
         
         function proceedToCheckout() {
+             // --- NEW FIX: Check for user login before proceeding ---
+            if (!currentUser) {
+                showNotification('You must be logged in to make a booking.', 'error');
+                showAuthModal('login');
+                return;
+            }
+
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
             if (!paymentMethod) {
                 showNotification('Please select a payment method', 'error');
