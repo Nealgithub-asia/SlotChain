@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SlotChain - Book Your Grooming Station</title>
-    <!-- --- MODIFIED: Favicon updated to the new image --- -->
+    <!-- --- MODIFIED: Favicon updated to the new image using a Base64 URI --- -->
     <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
@@ -556,6 +556,25 @@
         </div>
     </div>
 
+    <!-- --- NEW: Wallet Connect Modal --- -->
+    <div id="walletConnectModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+            <button id="closeWalletConnectModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Connect HashPack Wallet</h3>
+            <p class="text-gray-600 mb-6">Scan the QR code with your HashPack app or copy the pairing string to connect your wallet.</p>
+            <div class="flex justify-center mb-4">
+                <div id="qrCodeContainer" class="p-2 border rounded-lg"></div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Pairing String</label>
+                <div class="flex">
+                    <input type="text" id="pairingString" readonly class="flex-1 bg-gray-100 px-3 py-2 border border-gray-300 rounded-l-md">
+                    <button id="copyPairingString" class="bg-gray-600 text-white px-4 py-2 rounded-r-md hover:bg-gray-700">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Station Setup Modal -->
     <div id="stationSetupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto relative">
@@ -845,6 +864,7 @@
                     hederaState.pairedWalletData = pairingData.metadata;
                     hederaState.pairedAccounts = pairingData.accountIds;
                     updateWalletUI();
+                    document.getElementById('walletConnectModal').classList.add('hidden');
                 });
 
                 hashconnect.connectionStatusChangeEvent.on((connectionStatus) => {
@@ -858,6 +878,9 @@
                 let initData = await hashconnect.init(appMetadata, "testnet", false);
                 hederaState.topic = initData.topic;
                 hederaState.pairingString = initData.pairingString;
+                
+                document.getElementById('pairingString').value = hederaState.pairingString;
+                document.getElementById('qrCodeContainer').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(hederaState.pairingString)}" alt="HashPack QR Code">`;
 
                 isHashConnectReady = true;
 
@@ -873,8 +896,10 @@
                 showNotification('HashConnect is not ready, please wait.', 'error');
                 return;
             }
-            if (hashconnect) {
-                hashconnect.openPairingModal();
+            if (hederaState.pairedAccounts.length > 0) {
+                hashconnect.disconnect(hederaState.topic);
+            } else {
+                document.getElementById('walletConnectModal').classList.remove('hidden');
             }
         }
 
@@ -1236,6 +1261,13 @@
             document.getElementById('connectWalletBtn').addEventListener('click', connectWallet);
             document.getElementById('cardPaymentForm').addEventListener('submit', processCardPayment);
             document.getElementById('closeCardModal').addEventListener('click', () => document.getElementById('cardPaymentModal').classList.add('hidden'));
+            document.getElementById('closeWalletConnectModal').addEventListener('click', () => document.getElementById('walletConnectModal').classList.add('hidden'));
+            document.getElementById('copyPairingString').addEventListener('click', () => {
+                const pairingString = document.getElementById('pairingString');
+                pairingString.select();
+                document.execCommand('copy');
+                showNotification('Pairing string copied!', 'info');
+            });
             loadTimeSlots();
         }
 
