@@ -859,7 +859,7 @@
             const bookingId = await confirmBookingOnServer('hedera', 'pending');
             if (bookingId) {
                 currentBookingId = bookingId;
-                const nowPaymentsUrl = `https://nowpayments.io/payment/?iid=4910005095&order_id=${bookingId}`;
+                const nowPaymentsUrl = `https://sandbox.nowpayments.io/payment?iid=5093316327&order_id=${bookingId}`;
                 window.open(nowPaymentsUrl, '_blank');
                 // --- REMOVED 10-SECOND DELAY ---
                 setTimeout(() => simulatePaymentConfirmation(bookingId, 'hedera'), 500);
