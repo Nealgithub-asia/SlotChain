@@ -7,7 +7,7 @@
     <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    <link rel="stylesheet" href="hsttps://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -819,7 +819,6 @@
             "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
         ];
 
-        // --- MODIFIED: Changed to window.onload to ensure all scripts are loaded ---
         window.addEventListener('load', function() {
             initializeApp();
         });
@@ -835,7 +834,6 @@
         }
 
         function proceedToCheckout() {
-             // --- NEW FIX: Check for user login before proceeding ---
             if (!currentUser) {
                 showNotification('You must be logged in to make a booking.', 'error');
                 showAuthModal('login');
@@ -857,19 +855,15 @@
             }
         }
 
-        // --- FIXED: Corrected payment handling and redirection ---
         async function handleHbarPayment() {
             const bookingId = await confirmBookingOnServer('hedera', 'pending');
             if (bookingId) {
                 currentBookingId = bookingId;
-                // Use the correct NOWPayments URL and open in a new tab
                 const nowPaymentsUrl = `https://nowpayments.io/payment/?iid=4910005095&order_id=${bookingId}`;
                 window.open(nowPaymentsUrl, '_blank');
-
-                // --- SIMULATION FOR TESTING ---
                 setTimeout(() => {
                     simulatePaymentConfirmation(bookingId);
-                }, 10000); // Confirm after 10 seconds
+                }, 10000);
             }
         }
 
@@ -890,19 +884,15 @@
             }, 2000);
         }
 
-        // --- FIXED: Corrected payment handling and redirection ---
         async function handleCryptoPayment() {
             const bookingId = await confirmBookingOnServer('crypto', 'pending');
             if(bookingId) {
-                // Correctly set the iframe source for the NOWPayments widget
                 const widgetUrl = `https://nowpayments.io/embeds/payment-widget?iid=5552980381&order_id=${bookingId}`;
                 document.getElementById('nowPaymentsWidget').src = widgetUrl;
                 document.getElementById('nowPaymentsModal').classList.remove('hidden');
-
-                // --- SIMULATION FOR TESTING ---
                 setTimeout(() => {
                     simulatePaymentConfirmation(bookingId);
-                }, 10000); // Confirm after 10 seconds
+                }, 10000);
             }
         }
 
@@ -974,8 +964,7 @@
 
                 hideBookingModal();
                 showNotification(`Booking created! Please complete your payment.`);
-                return newBooking._id; // Return the new booking ID
-
+                return newBooking._id;
             } catch (error) {
                 console.error('Booking Error:', error);
                 showNotification(error.message, 'error');
@@ -984,8 +973,6 @@
         }
 
         async function simulatePaymentConfirmation(bookingId) {
-             // In a real app, this would be handled by the webhook.
-             // For testing, we manually update the status.
             await updateBookingStatus(bookingId, 'confirmed');
             showNotification('Payment confirmed (Simulated)! Your booking is complete.', 'success');
             document.getElementById('nowPaymentsModal').classList.add('hidden');
@@ -1012,7 +999,6 @@
                 showNotification(error.message, 'error');
             }
         }
-
 
         async function loadDashboardData() {
             const token = localStorage.getItem('slotchain_token');
@@ -1449,14 +1435,23 @@
             document.getElementById('loadingStations').classList.add('hidden');
         }
 
+        // --- FIXED: More robust station selection ---
         function selectStation(stationId) {
             if (!currentUser) {
                 showAuthModal('login');
                 return;
             }
-            selectedStation = groomingStations.find(s => s.id === stationId);
+            // Ensure stationId is treated as a string for comparison, as it comes from an HTML attribute.
+            selectedStation = groomingStations.find(s => String(s.id) === String(stationId));
+
+            if (!selectedStation) {
+                console.error("Failed to find station with ID:", stationId);
+                showNotification("Sorry, there was an error selecting that station. Please try again.", "error");
+                return;
+            }
             showBookingModal();
         }
+
 
         function showBookingModal() {
             document.getElementById('bookingModal').classList.remove('hidden');
