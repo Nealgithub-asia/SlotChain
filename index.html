@@ -861,9 +861,9 @@
                 currentBookingId = bookingId;
                 const nowPaymentsUrl = `https://nowpayments.io/payment/?iid=4910005095&order_id=${bookingId}`;
                 window.open(nowPaymentsUrl, '_blank');
-                setTimeout(() => {
-                    simulatePaymentConfirmation(bookingId);
-                }, 10000);
+                // --- REMOVED 10-SECOND DELAY ---
+                // Immediately simulate for demo purposes
+                setTimeout(() => simulatePaymentConfirmation(bookingId), 500);
             }
         }
 
@@ -890,9 +890,9 @@
                 const widgetUrl = `https://nowpayments.io/embeds/payment-widget?iid=5552980381&order_id=${bookingId}`;
                 document.getElementById('nowPaymentsWidget').src = widgetUrl;
                 document.getElementById('nowPaymentsModal').classList.remove('hidden');
-                setTimeout(() => {
-                    simulatePaymentConfirmation(bookingId);
-                }, 10000);
+                // --- REMOVED 10-SECOND DELAY ---
+                // Immediately simulate for demo purposes
+                setTimeout(() => simulatePaymentConfirmation(bookingId), 500);
             }
         }
 
@@ -937,6 +937,12 @@
             const token = localStorage.getItem('slotchain_token');
             const totalAmountText = document.getElementById('totalAmount').textContent;
             const amount = totalAmountText.replace('$', '');
+
+            // --- ADDED CHECK: Ensure selectedStation is not null ---
+            if (!selectedStation) {
+                showNotification("Error: No station selected. Please go back and select a station.", "error");
+                return null;
+            }
 
             const bookingData = {
                 stationId: selectedStation.id,
