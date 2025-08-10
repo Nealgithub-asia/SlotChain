@@ -1,85 +1,144 @@
-const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const cors = require('cors'); // Import cors
+const dotenv = require('dotenv');
+const cors = require('cors');
 
-const app = express();
+dotenv.config();
 
-// --- Middleware Setup ---
-app.use(cors());
-app.use(express.json());
+// --- Database Connection ---
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
+  return mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+};
 
-const StationSchema = new mongoose.Schema({
-  name: String,
-  settings: { type: Object, default: { duration: 60, maxSlots: 10 } }
+// --- Mongoose Schemas ---
+const UserSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' }
 });
+
 const BookingSchema = new mongoose.Schema({
-  stationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Station' },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  slot: Date,
-  status: { type: String, enum: ['booked', 'cancelled'], default: 'booked' }
+  stationId: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  stationName: String,
+  stationAddress: String,
+  service: String,
+  date: String,
+  time: String,
+  amount: String,
+  paymentMethod: String,
+  status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'confirmed' },
+  createdAt: { type: Date, default: Date.now }
 });
 
-const Station = mongoose.models.Station || mongoose.model('Station', StationSchema);
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Booking = mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
 
-// Middleware to verify JWT
-const auth = (req, res, next) => {
+// --- Auth Verification Function (REVISED) ---
+// This function directly verifies the token and returns the user ID or throws an error.
+const verifyToken = (req) => {
   const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Unauthorized: No token provided' });
+  if (!token) {
+    const err = new Error('Unauthorized: No token provided');
+    err.statusCode = 401;
+    throw err;
+  }
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
-    next();
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded.id;
   } catch (error) {
-    res.status(401).json({ error: 'Invalid or expired token' });
+    console.error("Authentication error:", error.message);
+    const err = new Error('Invalid or expired token');
+    err.statusCode = 401;
+    throw err;
   }
 };
 
-// Create station (admin only)
-app.post('/stations', auth, async (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Forbidden: Admins only' });
-  try {
-    const station = new Station(req.body);
-    await station.save();
-    res.status(201).json(station);
-  } catch(error) {
-    res.status(500).json({ error: 'Failed to create station.' });
-  }
-});
 
-// Book slot
-app.post('/book', auth, async (req, res) => {
-  try {
-    const { stationId, slot } = req.body;
-    const booking = new Booking({ stationId, userId: req.user.id, slot });
+// --- Route Handlers ---
+// These handlers now assume that req.user has already been set.
+
+// Handler for creating a booking or updating its status
+const handlePostBooking = async (req, res) => {
+    if (req.body.action === 'updateStatus') {
+        const { bookingId, status } = req.body;
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found.' });
+        }
+        if (booking.userId.toString() !== req.user.id) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+        booking.status = status;
+        await booking.save();
+        return res.status(200).json(booking);
+    }
+
+    const { stationId, stationName, stationAddress, service, date, time, amount, paymentMethod, status } = req.body;
+    const booking = new Booking({
+        stationId,
+        userId: req.user.id,
+        stationName,
+        stationAddress,
+        service,
+        date,
+        time,
+        amount,
+        paymentMethod,
+        status: status || 'confirmed'
+    });
     await booking.save();
     res.status(201).json(booking);
-  } catch(error) {
-    res.status(500).json({ error: 'Failed to create booking.' });
-  }
-});
+};
 
-// Get available slots
-app.get('/slots/:stationId', async (req, res) => {
-    try {
-        const { stationId } = req.params;
-        const bookings = await Booking.find({ stationId, status: 'booked' });
-        const station = await Station.findById(stationId);
-        if (!station) {
-            return res.status(404).json({ error: 'Station not found.' });
-        }
-        const slots = [];
-        const now = new Date();
-        for (let i = 0; i < station.settings.maxSlots; i++) {
-            const slot = new Date(now.getTime() + i * station.settings.duration * 60000);
-            if (!bookings.some(b => b.slot.getTime() === slot.getTime())) {
-            slots.push(slot);
-            }
-        }
-        res.json(slots);
-    } catch(error) {
-        res.status(500).json({ error: 'Failed to get available slots.' });
+// Handler for fetching user's bookings
+const handleGetBookings = async (req, res) => {
+    const bookings = await Booking.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    res.status(200).json(bookings);
+};
+
+
+// --- Main Serverless Function (REVISED) ---
+module.exports = async (req, res) => {
+  const corsMiddleware = cors();
+  await new Promise((resolve, reject) => {
+    corsMiddleware(req, res, (result) => {
+      if (result instanceof Error) return reject(result);
+      return resolve(result);
+    });
+  });
+
+  try {
+    await connectDB();
+
+    // Verify token at the beginning of the request flow
+    const userId = verifyToken(req);
+    req.user = { id: userId }; // Attach user ID to the request object
+
+    if (req.method === 'POST') {
+        return handlePostBooking(req, res);
     }
-});
 
-module.exports = app;
+    if (req.method === 'GET') {
+        return handleGetBookings(req, res);
+    }
+
+    res.setHeader('Allow', ['POST', 'GET']);
+    res.status(405).json({ error: `Method ${req.method} Not Allowed` });
+
+  } catch (error) {
+    // Catch authentication errors specifically
+    if (error.statusCode === 401) {
+        return res.status(401).json({ error: error.message });
+    }
+    // Catch all other errors
+    console.error('[API_BOOKINGS_ERROR]', error);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+  }
+};

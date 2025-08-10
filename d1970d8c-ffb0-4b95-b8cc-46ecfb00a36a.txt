@@ -1,7 +1,0 @@
-MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/grooming-app?retryWrites=true&w=majority
-JWT_SECRET=your_jwt_secret
-HEDERA_ACCOUNT_ID=0.0.xxxxxx
-HEDERA_PRIVATE_KEY=your_private_key
-CHAINGPT_API_KEY=your_chaingpt_api_key
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_specific_password

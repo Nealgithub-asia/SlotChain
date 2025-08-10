@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SlotChain - Book Your Grooming Station</title>
+    <!-- --- MODIFIED: Favicon updated to the new image --- -->
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABcc8IOAAAAAXNSR0IArs4c6QAAAzFJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDxUtACECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIDAAn8BMwAB85NB53EAAAAASUVORK5CYII=" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -16,71 +18,33 @@
         .crypto-glow { box-shadow: 0 0 20px rgba(255, 140, 0, 0.3); }
         .nft-glow { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
         .secure-glow { box-shadow: 0 0 20px rgba(34, 197, 94, 0.4); }
-        .hbar-glossy { 
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-            box-shadow: 
-                0 12px 40px rgba(139, 92, 246, 0.5),
+        .hbar-glossy, .crypto-glossy {
+            box-shadow:
                 inset 0 2px 0 rgba(255, 255, 255, 0.4),
                 inset 0 -2px 0 rgba(0, 0, 0, 0.15);
             border: 2px solid rgba(255, 255, 255, 0.3);
             transition: all 0.4s ease;
         }
-        label:hover .hbar-glossy {
-            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
-            box-shadow: 
+        .hbar-glossy {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+        }
+        .crypto-glossy {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            box-shadow: 0 12px 40px rgba(249, 115, 22, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+        }
+        label:hover .hbar-glossy, label:hover .crypto-glossy {
+            box-shadow:
                 0 20px 60px rgba(139, 92, 246, 0.8),
                 inset 0 2px 0 rgba(255, 255, 255, 0.5),
                 inset 0 -2px 0 rgba(0, 0, 0, 0.2);
             transform: translateY(-4px) scale(1.1);
         }
-        .dark .hbar-glossy {
-            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
-            box-shadow: 
-                0 12px 40px rgba(124, 58, 237, 0.6),
-                inset 0 2px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -2px 0 rgba(0, 0, 0, 0.25);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-        .dark label:hover .hbar-glossy {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-            box-shadow: 
-                0 20px 60px rgba(124, 58, 237, 0.9),
-                inset 0 2px 0 rgba(255, 255, 255, 0.4),
-                inset 0 -2px 0 rgba(0, 0, 0, 0.3);
-            transform: translateY(-4px) scale(1.1);
-        }
-        .card-glossy { 
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            box-shadow: 
-                0 8px 32px rgba(5, 150, 105, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-        .card-payment-option:hover .card-glossy {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            box-shadow: 
-                0 12px 40px rgba(5, 150, 105, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-            transform: translateY(-2px);
-        }
-        .dark .card-glossy {
-            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
-            box-shadow: 
-                0 8px 32px rgba(4, 120, 87, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-        .dark .card-payment-option:hover .card-glossy {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            box-shadow: 
-                0 12px 40px rgba(4, 120, 87, 0.7),
-                inset 0 1px 0 rgba(255, 255, 255, 0.35),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-            transform: translateY(-2px);
+        label:hover .crypto-glossy {
+             box-shadow:
+                0 20px 60px rgba(249, 115, 22, 0.8),
+                inset 0 2px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.2);
         }
         .nft-shimmer { background: linear-gradient(45deg, #fbbf24 25%, #f59e0b 50%, #fbbf24 75%); background-size: 200% 100%; animation: shimmer 2s infinite; }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
@@ -89,7 +53,7 @@
         .booking-slot.selected { background-color: #ff8c00; color: white; }
         .notification { position: fixed; top: 20px; right: 20px; z-index: 1000; transform: translateX(100%); transition: transform 0.3s ease; opacity: 0; }
         .notification.show { transform: translateX(0); opacity: 1; }
-        
+
         /* Dark Mode Styles */
         .dark { background-color: #0a0a0a; color: #ffffff; }
         .dark .bg-white { background-color: #1a1a1a; }
@@ -109,15 +73,15 @@
         .dark input::placeholder { color: #6b7280; }
         .dark .chatbot-window { background: #1a1a1a; }
         .dark .chatbot-input-area { border-color: #4b5563; }
-        
+
         /* Dark mode setup station styles */
-        .dark .bg-gradient-to-r.from-orange-100.to-yellow-100 { 
-            background: linear-gradient(to right, #7c2d12, #a16207); 
-            border-color: #ea580c; 
+        .dark .bg-gradient-to-r.from-orange-100.to-yellow-100 {
+            background: linear-gradient(to right, #7c2d12, #a16207);
+            border-color: #ea580c;
         }
         .dark .bg-gradient-to-r.from-orange-100.to-yellow-100 .text-gray-900 { color: #ffffff; }
         .dark .bg-gradient-to-r.from-orange-100.to-yellow-100 .text-gray-800 { color: #f3f4f6; }
-        
+
         /* Chatbot Styles */
         .chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
         .chatbot-toggle { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #ff8c00 0%, #ff6b35 100%); color: white; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3); transition: all 0.3s ease; }
@@ -139,7 +103,7 @@
         .typing-dot:nth-child(2) { animation-delay: 0.2s; }
         .typing-dot:nth-child(3) { animation-delay: 0.4s; }
         @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
-        
+
         /* Image Carousel Styles */
         .image-carousel {
             position: relative;
@@ -199,7 +163,7 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
         /* Theme Toggle */
         .theme-toggle { position: relative; width: 50px; height: 24px; background: #d1d5db; border-radius: 12px; cursor: pointer; transition: background 0.3s ease; }
         .theme-toggle.dark { background: #ff8c00; }
@@ -254,12 +218,12 @@
         <section class="relative text-white py-20 overflow-hidden">
             <!-- Background Image -->
             <div class="absolute inset-0">
-                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1920&h=1080&fit=crop" 
-                     alt="Modern Indian barber shop interior" 
+                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1920&h=1080&fit=crop"
+                     alt="Modern Indian barber shop interior"
                      class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black bg-opacity-50"></div>
             </div>
-            
+
             <!-- Content Overlay -->
             <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h1 class="text-5xl font-bold mb-6">Your next haircut or makeover, just a click away</h1>
@@ -310,7 +274,7 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">SlotChain Network</h2>
                     <p class="text-gray-600 max-w-2xl mx-auto">Discover grooming stations in your area or join our network as a station owner</p>
                 </div>
-                
+
                 <!-- Location Controls -->
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
@@ -352,7 +316,7 @@
                             Search City
                         </button>
                     </div>
-                    
+
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <label class="text-sm font-medium text-gray-700">Search Radius:</label>
@@ -369,7 +333,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Action Buttons -->
                 <div class="flex justify-center space-x-4 mb-8">
                     <button id="browseStationsBtn" class="bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 flex items-center">
@@ -381,13 +345,13 @@
                         Setup Your Station
                     </button>
                 </div>
-                
+
                 <!-- Loading State -->
                 <div id="loadingStations" class="hidden text-center py-12">
                     <div class="loading-spinner mx-auto mb-4"></div>
                     <p class="text-gray-600">Finding grooming stations near you...</p>
                 </div>
-                
+
                 <!-- Stations Display -->
                 <div id="stationsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Stations will be populated here -->
@@ -402,12 +366,12 @@
             <button id="closeAuthModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
                 <i class="fas fa-times"></i>
             </button>
-            
+
             <div class="text-center mb-6">
                 <h3 id="authTitle" class="text-2xl font-bold text-gray-900">Welcome to SlotChain</h3>
                 <p class="text-gray-600 mt-2">Join the future of grooming bookings</p>
             </div>
-            
+
             <form id="authForm">
                 <div id="nameField" class="hidden mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
@@ -423,7 +387,7 @@
                 </div>
                 <button type="submit" id="authSubmit" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Sign In</button>
             </form>
-            
+
             <div class="mt-4 text-center">
                 <button id="authToggle" class="text-indigo-600 hover:text-indigo-800">Don't have an account? Sign up</button>
             </div>
@@ -436,11 +400,11 @@
             <button id="closeBookingModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            
+
             <div class="mb-6">
                 <h3 class="text-2xl font-bold text-gray-900">Book Your Appointment</h3>
             </div>
-            
+
             <div id="bookingStep1" class="booking-step">
                 <h4 class="text-lg font-semibold mb-4">Select Service & Date</h4>
                 <div class="mb-4">
@@ -465,7 +429,7 @@
                 </div>
                 <button id="nextToPayment" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300 disabled:bg-gray-400" disabled>Continue to Payment</button>
             </div>
-            
+
             <div id="bookingStep2" class="booking-step hidden">
                 <h4 class="text-lg font-semibold mb-4">Payment & NFT Minting</h4>
                 <div class="bg-gray-50 p-4 rounded-lg mb-6">
@@ -482,7 +446,7 @@
                         <span id="totalAmount">$0</span>
                     </div>
                 </div>
-                
+
                 <div class="mb-6">
                     <h5 class="font-semibold mb-3">Payment Method</h5>
                     <div class="space-y-3">
@@ -506,6 +470,17 @@
                                 <div class="text-xs text-purple-700 dark:text-purple-400 mt-1 font-medium">✨ Earn collectible tokens with every booking</div>
                             </div>
                         </label>
+                        <!-- --- MODIFIED: Added dark mode hover styles --- -->
+                        <label class="flex items-center p-4 border-2 border-orange-400 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 dark:hover:from-orange-900/30 dark:hover:to-yellow-900/30 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-orange-25 to-yellow-25">
+                            <input type="radio" name="paymentMethod" value="crypto" class="mr-4">
+                            <div class="crypto-glossy p-4 rounded-xl relative overflow-hidden">
+                                 <i class="fas fa-coins text-white text-2xl"></i>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="font-bold text-lg text-gray-900 dark:text-white">Other Crypto</div>
+                                <div class="text-sm text-orange-800 dark:text-orange-300 font-semibold">Pay with ETH, SOL, TON, and more</div>
+                            </div>
+                        </label>
                         <label class="card-payment-option flex items-center p-4 border-2 border-emerald-500 rounded-xl cursor-pointer hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 dark:hover:from-emerald-900/30 dark:hover:to-green-900/30 hover:border-emerald-600 dark:hover:border-emerald-400 transition-all duration-300 shadow-lg hover:shadow-xl bg-gradient-to-r from-emerald-50/50 to-green-50/50 dark:bg-gradient-to-r dark:from-emerald-900/20 dark:to-green-900/20">
                             <input type="radio" name="paymentMethod" value="card" class="mr-4">
                             <div class="card-glossy p-4 rounded-xl">
@@ -519,7 +494,7 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <div id="nftPreview" class="hidden mb-6 p-6 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg border-2 border-purple-400 shadow-lg">
                     <h5 class="font-bold mb-3 flex items-center text-white text-lg">
                         <i class="fas fa-gem text-yellow-300 mr-2 text-xl"></i>
@@ -536,11 +511,53 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="flex space-x-4">
                     <button id="backToBooking" class="flex-1 border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 transition duration-300">Back</button>
-                    <button id="confirmBooking" class="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Confirm Booking</button>
+                    <!-- --- MODIFIED: Changed button text --- -->
+                    <button id="proceedToCheckoutBtn" class="flex-1 bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Proceed to Checkout</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- NEW: Card Payment Modal --- -->
+    <div id="cardPaymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 relative">
+             <button id="closeCardModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-xl font-bold text-gray-900 mb-6">Enter Card Details</h3>
+            <form id="cardPaymentForm">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
+                    <input type="text" placeholder="0000 0000 0000 0000" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                        <input type="text" placeholder="MM/YY" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                    </div>
+                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">CVC</label>
+                        <input type="text" placeholder="123" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">Pay Now (Demo)</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- --- NEW: NOWPayments Modal --- -->
+    <div id="nowPaymentsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 relative">
+            <button id="closeNowPaymentsModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Complete Your Payment</h3>
+            <p class="text-gray-600 mb-6">Your booking is pending. Please complete your payment using the widget below to confirm your appointment.</p>
+            <div class="w-full h-[700px]">
+                <iframe id="nowPaymentsWidget" src="https://nowpayments.io/embeds/payment-widget?iid=5552980381" width="410" height="696" frameborder="0" scrolling="no" style="overflow-y: hidden;">
+                    Can't load widget
+                </iframe>
             </div>
         </div>
     </div>
@@ -551,11 +568,11 @@
             <button id="closeStationSetupModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
                 <i class="fas fa-times text-xl"></i>
             </button>
-            
+
             <div class="mb-6">
                 <h3 class="text-2xl font-bold text-gray-900">Setup Your Grooming Station</h3>
             </div>
-            
+
             <div class="mb-6">
                 <div class="bg-gradient-to-r from-orange-100 to-yellow-100 p-6 rounded-lg mb-6 border border-orange-200">
                     <h4 class="text-lg font-semibold mb-2 flex items-center text-gray-900">
@@ -564,7 +581,7 @@
                     </h4>
                     <p class="text-gray-800 font-medium">List your grooming station on SlotChain and start accepting crypto payments with automatic NFT rewards for your customers!</p>
                 </div>
-                
+
                 <form id="stationSetupForm">
                     <div class="grid md:grid-cols-2 gap-4 mb-4">
                         <div>
@@ -576,12 +593,12 @@
                             <input type="text" id="ownerName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Your full name" required>
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Address</label>
                         <input type="text" id="stationAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="123 Main St, City, State" required>
                     </div>
-                    
+
                     <div class="grid md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
@@ -592,7 +609,7 @@
                             <input type="email" id="stationEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="contact@yourstation.com" required>
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Services Offered</label>
                         <div class="grid grid-cols-2 gap-2">
@@ -614,7 +631,7 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Station Features</label>
                         <div class="grid grid-cols-2 gap-2">
@@ -636,13 +653,13 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Hedera HBAR Wallet Address</label>
                         <input type="text" id="walletAddress" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="0.0.123456 (for receiving crypto payments)" required>
                         <p class="text-sm text-gray-500 mt-1">This is where you'll receive HBAR payments from customers</p>
                     </div>
-                    
+
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
                         <div class="flex items-start">
                             <i class="fas fa-info-circle text-yellow-600 mr-2 mt-1"></i>
@@ -652,7 +669,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition duration-300 font-semibold">
                         Submit Station Application
                     </button>
@@ -676,7 +693,7 @@
                     </button>
                 </div>
             </div>
-            
+
             <div class="grid lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
@@ -688,7 +705,7 @@
                             <!-- Bookings will be populated here -->
                         </div>
                     </div>
-                    
+
                     <div class="bg-white rounded-xl shadow-sm p-6">
                         <h2 class="text-xl font-semibold mb-4 text-gray-900 flex items-center">
                             <i class="fas fa-history text-indigo-600 mr-2"></i>
@@ -699,7 +716,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div>
                     <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
                         <h2 class="text-xl font-semibold mb-4 flex items-center text-gray-900">
@@ -710,7 +727,7 @@
                             <!-- NFTs will be populated here -->
                         </div>
                     </div>
-                    
+
 
                 </div>
             </div>
@@ -772,18 +789,19 @@
     </div>
 
     <script>
-        // --- START OF CHANGES ---
+        // --- START OF SCRIPT ---
 
-        // The base URL for our API. When you deploy, this will just be '/api'.
-        // For local testing with `vercel dev`, it's usually a specific port.
-        const API_URL = '/api/auth'; // Using a relative path for Vercel deployment
+        const AUTH_API_URL = '/api/auth';
+        const BOOKINGS_API_URL = '/api/bookings';
+        const NFT_API_URL = '/api/nfts';
 
         // Application State
         let currentUser = null;
         let selectedStation = null;
         let selectedSlot = null;
-        let bookings = JSON.parse(localStorage.getItem('slotchain_bookings') || '[]');
+        let bookings = [];
         let nftCollection = JSON.parse(localStorage.getItem('slotchain_nfts') || '[]');
+        let currentBookingId = null;
 
         let chatbotOpen = false;
         let map = null;
@@ -791,110 +809,286 @@
         let userLocation = null;
         let groomingStations = [];
         let stationCarousels = {};
-        
-        // Perplexity API Configuration
+
         const PERPLEXITY_API_KEY = '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';
         const PERPLEXITY_API_URL = 'https://api.perplexity.ai/chat/completions';
 
-        // Time slots for booking
         const timeSlots = [
             "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
             "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
             "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
         ];
 
-        // --- NEW handleAuth FUNCTION ---
-        // This function now sends data to the backend instead of faking it.
+        window.addEventListener('load', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            setupEventListeners();
+            checkAuthState();
+            initMap();
+            initializeDummyStations();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+            document.getElementById('bookingDate').value = today;
+        }
+
+        function proceedToCheckout() {
+            if (!currentUser) {
+                showNotification('You must be logged in to make a booking.', 'error');
+                showAuthModal('login');
+                return;
+            }
+
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            if (!paymentMethod) {
+                showNotification('Please select a payment method', 'error');
+                return;
+            }
+
+            if (paymentMethod.value === 'hedera') {
+                handleHbarPayment();
+            } else if (paymentMethod.value === 'crypto') {
+                handleCryptoPayment();
+            } else {
+                handleCardPayment();
+            }
+        }
+
+        async function handleHbarPayment() {
+            const bookingId = await confirmBookingOnServer('hedera', 'pending');
+            if (bookingId) {
+                currentBookingId = bookingId;
+                const nowPaymentsUrl = `https://sandbox.nowpayments.io/payment?iid=5093316327&order_id=${bookingId}`;
+                window.open(nowPaymentsUrl, '_blank');
+                // --- REMOVED 10-SECOND DELAY ---
+                setTimeout(() => simulatePaymentConfirmation(bookingId, 'hedera'), 500);
+            }
+        }
+
+        function handleCardPayment() {
+            document.getElementById('cardPaymentModal').classList.remove('hidden');
+        }
+
+        async function processCardPayment(e) {
+            e.preventDefault();
+            showNotification('Processing card payment...', 'info');
+            const bookingId = await confirmBookingOnServer('card', 'pending');
+            setTimeout(async () => {
+                document.getElementById('cardPaymentModal').classList.add('hidden');
+                if (bookingId) {
+                    await updateBookingStatus(bookingId, 'confirmed');
+                    showNotification('Card payment successful!', 'success');
+                }
+            }, 2000);
+        }
+
+        async function handleCryptoPayment() {
+            const bookingId = await confirmBookingOnServer('crypto', 'pending');
+            if(bookingId) {
+                const widgetUrl = `https://nowpayments.io/embeds/payment-widget?iid=5552980381&order_id=${bookingId}`;
+                document.getElementById('nowPaymentsWidget').src = widgetUrl;
+                document.getElementById('nowPaymentsModal').classList.remove('hidden');
+                // --- REMOVED 10-SECOND DELAY ---
+                setTimeout(() => simulatePaymentConfirmation(bookingId, 'crypto'), 500);
+            }
+        }
+
         async function handleAuth(e) {
             e.preventDefault();
             const mode = document.getElementById('authModal').dataset.mode;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            const endpoint = mode === 'signup' ? '/register' : '/login';
-            const url = `${API_URL}${endpoint}`;
+            const action = mode === 'signup' ? 'register' : 'login';
 
             try {
-                const response = await fetch(url, {
+                const response = await fetch(AUTH_API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, email, password }),
                 });
-
                 const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Something went wrong');
 
-                if (!response.ok) {
-                    // If the server response is not OK, throw an error to be caught by the catch block
-                    throw new Error(data.error || 'Something went wrong');
-                }
-
-                if (mode === 'signup') {
+                if (action === 'register') {
                     showNotification('Account created successfully! Please log in.');
-                    // Switch to login view after successful registration
                     showAuthModal('login');
                 } else {
-                    // On successful login, the backend sends a token
                     localStorage.setItem('slotchain_token', data.token);
-                    // For UI purposes, we can decode the token to get user info or just use email
-                    currentUser = { email: email }; 
+                    const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
+                    currentUser = { email: decodedToken.email, name: email.split('@')[0] };
+                    localStorage.setItem('slotchain_user', JSON.stringify(currentUser));
                     updateAuthUI();
                     hideAuthModal();
                     showNotification('Logged in successfully!');
                 }
-
             } catch (error) {
                 console.error('Authentication Error:', error);
                 showNotification(error.message, 'error');
             }
         }
 
-        // --- NEW logout FUNCTION ---
-        // Clears the authentication token from storage.
+        async function confirmBookingOnServer(paymentMethodValue, status = 'confirmed') {
+            const service = document.getElementById('serviceSelect');
+            const selectedOption = service.options[service.selectedIndex];
+            const date = document.getElementById('bookingDate').value;
+            const token = localStorage.getItem('slotchain_token');
+            const totalAmountText = document.getElementById('totalAmount').textContent;
+            const amount = totalAmountText.replace('$', '');
+
+            if (!selectedStation) {
+                showNotification("Error: No station selected. Please go back and select a station.", "error");
+                return null;
+            }
+
+            const bookingData = {
+                stationId: selectedStation.id,
+                stationName: selectedStation.stationName || selectedStation.name,
+                stationAddress: selectedStation.address || selectedStation.location,
+                service: selectedOption.text,
+                date: date,
+                time: selectedSlot,
+                amount: amount,
+                paymentMethod: paymentMethodValue,
+                status: status,
+            };
+
+            try {
+                const response = await fetch(BOOKINGS_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(bookingData),
+                });
+                const newBooking = await response.json();
+                if (!response.ok) throw new Error(newBooking.error || 'Failed to create booking.');
+
+                // --- NEW: Add the new booking to the local array ---
+                bookings.push(newBooking);
+
+                hideBookingModal();
+                showNotification(`Booking created! Please complete your payment.`);
+                return newBooking._id;
+            } catch (error) {
+                console.error('Booking Error:', error);
+                showNotification(error.message, 'error');
+                return null;
+            }
+        }
+
+        // --- FIXED: Added paymentMethod parameter ---
+        async function simulatePaymentConfirmation(bookingId, paymentMethod) {
+            await updateBookingStatus(bookingId, 'confirmed');
+            showNotification('Payment confirmed (Simulated)! Your booking is complete.', 'success');
+            document.getElementById('nowPaymentsModal').classList.add('hidden');
+
+            // --- NEW: Trigger NFT minting for crypto payments ---
+            if (paymentMethod === 'hedera' || paymentMethod === 'crypto') {
+                mintNftForBooking(bookingId);
+            }
+        }
+
+        // --- NEW: Function to handle NFT creation and storage ---
+        function mintNftForBooking(bookingId) {
+            const booking = bookings.find(b => b._id === bookingId);
+            if (!booking) {
+                console.error("Could not find booking to mint NFT for.");
+                return;
+            }
+
+            const newNft = {
+                number: String(Math.floor(Math.random() * 999) + 1).padStart(3, '0'),
+                rarity: 'Rare',
+                service: booking.service,
+                date: new Date().toISOString(),
+                bookingId: bookingId
+            };
+
+            nftCollection.push(newNft);
+            localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
+            showNotification('Congratulations! You earned an exclusive NFT.', 'success');
+
+            // If the dashboard is open, refresh the NFT list
+            if (!document.getElementById('dashboard').classList.contains('hidden')) {
+                loadNFTCollection();
+            }
+        }
+
+
+        async function updateBookingStatus(bookingId, status) {
+            const token = localStorage.getItem('slotchain_token');
+            try {
+                const response = await fetch(BOOKINGS_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'updateStatus',
+                        bookingId: bookingId,
+                        status: status
+                    }),
+                });
+                if (!response.ok) throw new Error('Failed to update booking status.');
+            } catch (error) {
+                console.error('Update Booking Status Error:', error);
+                showNotification(error.message, 'error');
+            }
+        }
+
+        async function loadDashboardData() {
+            const token = localStorage.getItem('slotchain_token');
+            if (!token) return;
+
+            try {
+                const response = await fetch(BOOKINGS_API_URL, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const serverBookings = await response.json();
+                if (!response.ok) throw new Error(serverBookings.error || 'Could not fetch bookings.');
+                bookings = serverBookings;
+                loadUpcomingBookings();
+                loadBookingHistory();
+                loadNFTCollection();
+            } catch (error) {
+                console.error("Failed to load dashboard data:", error);
+                showNotification(error.message, 'error');
+            }
+        }
+
         function logout() {
             currentUser = null;
-            localStorage.removeItem('slotchain_token'); // Remove the token
-            localStorage.removeItem('slotchain_user'); // Also clear the old user object
+            bookings = [];
+            localStorage.removeItem('slotchain_token');
+            localStorage.removeItem('slotchain_user');
             updateAuthUI();
             showMainContent();
             showNotification('Logged out successfully');
         }
 
-        // --- NEW checkAuthState FUNCTION ---
-        // Checks for the token to see if the user is logged in.
         function checkAuthState() {
             const token = localStorage.getItem('slotchain_token');
             if (token) {
-                // In a real app, you'd verify this token with the backend.
-                // For now, we'll just assume if a token exists, the user is logged in.
-                // We don't have user's name from the token without decoding it, so we'll use a placeholder.
-                // A better approach would be to have a /api/user/me endpoint to get user details.
-                const oldUser = JSON.parse(localStorage.getItem('slotchain_user'));
-                currentUser = { name: oldUser ? oldUser.name : "User" };
-                updateAuthUI();
+                const savedUser = JSON.parse(localStorage.getItem('slotchain_user'));
+                if (savedUser) {
+                    currentUser = savedUser;
+                    updateAuthUI();
+                }
             }
         }
 
-
-        // --- END OF CHANGES ---
-
-        // Leaflet Map initialization
         function initMap() {
             try {
-                // Initialize Leaflet map (hidden, used for geocoding)
                 const mapDiv = document.createElement('div');
                 mapDiv.style.display = 'none';
                 document.body.appendChild(mapDiv);
-                
-                map = L.map(mapDiv).setView([12.9716, 77.5946], 13); // Default to Bengaluru
-                
-                // Add OpenStreetMap tiles
+                map = L.map(mapDiv).setView([12.9716, 77.5946], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
-                
-                // Try to get user's location
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
@@ -904,28 +1098,17 @@
                             };
                             searchNearbyStations();
                         },
-                        () => {
-                            // If geolocation fails, show demo stations
-                            showDemoStations();
-                        }
+                        () => { showDemoStations(); }
                     );
                 } else {
                     showDemoStations();
                 }
             } catch (error) {
-                // If Leaflet fails to load, show demo stations
                 console.log('Leaflet not available, showing demo stations');
                 showDemoStations();
             }
         }
-        
-        // Initialize demo stations on page load
-        window.addEventListener('load', function() {
-            initMap();
-            initializeDummyStations();
-        });
-        
-        // Initialize dummy stations with setup data
+
         function initializeDummyStations() {
             const dummyStations = [
                 {
@@ -935,7 +1118,7 @@
                     address: '123 MG Road, Koramangala, Bengaluru, Karnataka',
                     phone: '(080) 123-4567',
                     email: 'contact@royalcuts.com',
-                    walletAddress: '0.0.123456',
+                    walletAddress: '0.0.4568987',
                     services: ['haircut', 'beard-trim', 'styling', 'full-service'],
                     features: ['wifi', 'parking', 'premium-products', 'massage-chairs'],
                     rating: 4.8,
@@ -952,169 +1135,61 @@
                     opening_hours: { open_now: true },
                     submittedAt: '2024-01-15T10:00:00Z',
                     status: 'approved'
-                },
-                {
-                    id: 'station_2',
-                    stationName: 'Mysore Palace Salon',
-                    ownerName: 'Priya Sharma',
-                    address: '456 Brigade Road, Indiranagar, Bengaluru, Karnataka',
-                    phone: '(080) 234-5678',
-                    email: 'info@mysorepalace.com',
-                    walletAddress: '0.0.234567',
-                    services: ['haircut', 'styling', 'full-service'],
-                    features: ['wifi', 'premium-products', 'parking'],
-                    rating: 4.6,
-                    user_ratings_total: 89,
-                    price_level: 2,
-                    photos: [
-                        'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop',
-                        'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop'
-                    ],
-                    reviews: [
-                        { text: "Beautiful salon with traditional touch. Great styling services!", author_name: "Meera Reddy" },
-                        { text: "Professional staff and excellent ambiance. Highly recommended!", author_name: "Kavya Nair" }
-                    ],
-                    opening_hours: { open_now: true },
-                    submittedAt: '2024-01-20T14:30:00Z',
-                    status: 'approved'
-                },
-                {
-                    id: 'station_3',
-                    stationName: 'Karnataka Kings Barber',
-                    ownerName: 'Suresh Gowda',
-                    address: '789 Commercial Street, Whitefield, Bengaluru, Karnataka',
-                    phone: '(080) 345-6789',
-                    email: 'kings@karnatakabarber.com',
-                    walletAddress: '0.0.345678',
-                    services: ['haircut', 'beard-trim', 'full-service'],
-                    features: ['wifi', 'massage-chairs'],
-                    rating: 4.4,
-                    user_ratings_total: 67,
-                    price_level: 2,
-                    photos: [
-                        'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&h=300&fit=crop',
-                        'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=400&h=300&fit=crop'
-                    ],
-                    reviews: [
-                        { text: "Traditional barber shop with modern facilities. Great beard trimming!", author_name: "Ravi Kumar" },
-                        { text: "Friendly service and good prices. Perfect for regular haircuts.", author_name: "Anil Joshi" }
-                    ],
-                    opening_hours: { open_now: false },
-                    submittedAt: '2024-01-25T09:15:00Z',
-                    status: 'approved'
                 }
             ];
-            
-            // Store dummy stations
             localStorage.setItem('slotchain_registered_stations', JSON.stringify(dummyStations));
             groomingStations = dummyStations;
         }
-        
-        // Show available stations on page load
+
         function showAvailableStations() {
             const registeredStations = JSON.parse(localStorage.getItem('slotchain_registered_stations') || '[]');
             const stationApplications = JSON.parse(localStorage.getItem('slotchain_station_applications') || '[]');
-            
-            // Combine approved applications with dummy stations
             const approvedApplications = stationApplications.filter(app => app.status === 'approved');
             const allStations = [...registeredStations, ...approvedApplications];
-            
+
             if (allStations.length === 0) {
-                document.getElementById('stationsList').innerHTML = `
-                    <div class="col-span-full text-center py-12">
-                        <i class="fas fa-store text-6xl text-gray-300 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-600 mb-2">No Stations Available Yet</h3>
-                        <p class="text-gray-500">Check back soon for new grooming stations!</p>
-                    </div>
-                `;
+                document.getElementById('stationsList').innerHTML = `<div class="col-span-full text-center py-12"><i class="fas fa-store text-6xl text-gray-300 mb-4"></i><h3 class="text-xl font-semibold text-gray-600 mb-2">No Stations Available Yet</h3><p class="text-gray-500">Check back soon for new grooming stations!</p></div>`;
             } else {
                 groomingStations = allStations;
                 displayStations();
             }
         }
 
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
-            setupEventListeners();
-            checkAuthState();
-
-        });
-
-        function initializeApp() {
-            // Set minimum date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('bookingDate').min = today;
-            document.getElementById('bookingDate').value = today;
-        }
-
         function setupEventListeners() {
-            // Auth buttons
             document.getElementById('loginBtn').addEventListener('click', () => showAuthModal('login'));
             document.getElementById('signupBtn').addEventListener('click', () => showAuthModal('signup'));
             document.getElementById('logoutBtn').addEventListener('click', logout);
             document.getElementById('dashboardBtn').addEventListener('click', showDashboard);
-            
-
-            
-            // Location controls
             document.getElementById('useLocationBtn').addEventListener('click', useCurrentLocation);
             document.getElementById('searchLocationBtn').addEventListener('click', searchByLocation);
             document.getElementById('searchCityBtn').addEventListener('click', searchByCity);
             document.getElementById('citySelect').addEventListener('change', searchByCity);
-            document.getElementById('locationInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchByLocation();
-            });
+            document.getElementById('locationInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchByLocation(); });
             document.getElementById('radiusSelect').addEventListener('change', searchNearbyStations);
-            
-            // Station setup
             document.getElementById('setupStationBtn').addEventListener('click', showStationSetupModal);
             document.getElementById('closeStationSetupModal').addEventListener('click', hideStationSetupModal);
             document.getElementById('stationSetupForm').addEventListener('submit', handleStationSetup);
-            
-            // Browse stations
             document.getElementById('browseStationsBtn').addEventListener('click', showAvailableStations);
-            
-            // Notification close button
             document.getElementById('closeNotification').addEventListener('click', closeNotification);
-            
-            // Chatbot
             document.getElementById('chatbotToggle').addEventListener('click', toggleChatbot);
             document.getElementById('closeChatbot').addEventListener('click', closeChatbot);
             document.getElementById('sendMessage').addEventListener('click', sendChatMessage);
-            document.getElementById('chatbotInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendChatMessage();
-            });
-            
-            // Modal controls
+            document.getElementById('chatbotInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendChatMessage(); });
             document.getElementById('closeAuthModal').addEventListener('click', hideAuthModal);
             document.getElementById('closeBookingModal').addEventListener('click', hideBookingModal);
             document.getElementById('authToggle').addEventListener('click', toggleAuthMode);
-            
-            // Auth form
             document.getElementById('authForm').addEventListener('submit', handleAuth);
-            
-            // Booking flow
-            document.getElementById('bookNowBtn').addEventListener('click', () => {
-                document.getElementById('stationsSection').scrollIntoView({ behavior: 'smooth' });
-            });
-            
-            // Setup station button
+            document.getElementById('bookNowBtn').addEventListener('click', () => { document.getElementById('stationsSection').scrollIntoView({ behavior: 'smooth' }); });
             document.getElementById('setupStationMainBtn').addEventListener('click', showStationSetupModal);
-            
-            // Booking modal
             document.getElementById('serviceSelect').addEventListener('change', updateBookingDetails);
             document.getElementById('bookingDate').addEventListener('change', loadTimeSlots);
             document.getElementById('nextToPayment').addEventListener('click', showPaymentStep);
             document.getElementById('backToBooking').addEventListener('click', showBookingStep);
-            document.getElementById('confirmBooking').addEventListener('click', confirmBooking);
-            
-            // Payment method selection
-            document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-                radio.addEventListener('change', handlePaymentMethodChange);
-            });
-            
-            // Load time slots on page load
+            document.getElementById('proceedToCheckoutBtn').addEventListener('click', proceedToCheckout);
+            document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => { radio.addEventListener('change', handlePaymentMethodChange); });
+            document.getElementById('cardPaymentForm').addEventListener('submit', processCardPayment);
+            document.getElementById('closeCardModal').addEventListener('click', () => document.getElementById('cardPaymentModal').classList.add('hidden'));
+            document.getElementById('closeNowPaymentsModal').addEventListener('click', () => document.getElementById('nowPaymentsModal').classList.add('hidden'));
             loadTimeSlots();
         }
 
@@ -1124,7 +1199,7 @@
             const nameField = document.getElementById('nameField');
             const submitBtn = document.getElementById('authSubmit');
             const toggle = document.getElementById('authToggle');
-            
+
             if (mode === 'signup') {
                 title.textContent = 'Create Your Account';
                 nameField.classList.remove('hidden');
@@ -1136,7 +1211,7 @@
                 submitBtn.textContent = 'Sign In';
                 toggle.textContent = "Don't have an account? Sign up";
             }
-            
+
             modal.classList.remove('hidden');
             modal.dataset.mode = mode;
         }
@@ -1156,7 +1231,7 @@
             const signupBtn = document.getElementById('signupBtn');
             const userMenu = document.getElementById('userMenu');
             const userName = document.getElementById('userName');
-            
+
             if (currentUser) {
                 loginBtn.classList.add('hidden');
                 signupBtn.classList.add('hidden');
@@ -1169,65 +1244,27 @@
             }
         }
 
-        // Search for nearby grooming stations using Nominatim API
         async function searchNearbyStations() {
             if (!userLocation) {
                 showDemoStations();
                 return;
             }
-            
             showLoadingStations();
-            
             try {
-                // Use Overpass API to find nearby grooming stations
                 const radius = parseInt(document.getElementById('radiusSelect').value);
-                const overpassQuery = `
-                    [out:json][timeout:25];
-                    (
-                        node["shop"="hairdresser"](around:${radius},${userLocation.lat},${userLocation.lng});
-                        node["shop"="barber"](around:${radius},${userLocation.lat},${userLocation.lng});
-                        node["amenity"="barber"](around:${radius},${userLocation.lat},${userLocation.lng});
-                        way["shop"="hairdresser"](around:${radius},${userLocation.lat},${userLocation.lng});
-                        way["shop"="barber"](around:${radius},${userLocation.lat},${userLocation.lng});
-                        way["amenity"="barber"](around:${radius},${userLocation.lat},${userLocation.lng});
-                    );
-                    out center meta;
-                `;
-                
-                const response = await fetch('https://overpass-api.de/api/interpreter', {
-                    method: 'POST',
-                    body: overpassQuery
-                });
-                
+                const overpassQuery = `[out:json][timeout:25];(node["shop"="hairdresser"](around:${radius},${userLocation.lat},${userLocation.lng});node["shop"="barber"](around:${radius},${userLocation.lat},${userLocation.lng});node["amenity"="barber"](around:${radius},${userLocation.lat},${userLocation.lng});way["shop"="hairdresser"](around:${radius},${userLocation.lat},${userLocation.lng});way["shop"="barber"](around:${radius},${userLocation.lat},${userLocation.lng});way["amenity"="barber"](around:${radius},${userLocation.lat},${userLocation.lng}););out center meta;`;
+                const response = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: overpassQuery });
                 const data = await response.json();
-                
+
                 if (data.elements && data.elements.length > 0) {
                     groomingStations = data.elements.slice(0, 12).map((element, index) => {
                         const lat = element.lat || element.center?.lat;
                         const lon = element.lon || element.center?.lon;
-                        
-                        return {
-                            id: element.id || index,
-                            name: element.tags?.name || `Grooming Station ${index + 1}`,
-                            location: element.tags?.['addr:street'] || `Near ${userLocation.lat.toFixed(3)}, ${userLocation.lng.toFixed(3)}`,
-                            rating: (Math.random() * 1.5 + 3.5).toFixed(1),
-                            user_ratings_total: Math.floor(Math.random() * 200) + 50,
-                            price_level: Math.floor(Math.random() * 3) + 1,
-                            photos: getRandomPhotos(),
-                            phone: element.tags?.phone || generateRandomPhone(),
-                            website: element.tags?.website || `https://${element.tags?.name?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'grooming'}.com`,
-                            opening_hours: { open_now: Math.random() > 0.3 },
-                            reviews: generateDemoReviews(),
-                            services: ["haircut", "beard-trim", "styling"],
-                            features: getRandomFeatures(),
-                            coordinates: { lat, lon }
-                        };
+                        return { id: element.id || index, name: element.tags?.name || `Grooming Station ${index + 1}`, location: element.tags?.['addr:street'] || `Near ${userLocation.lat.toFixed(3)}, ${userLocation.lng.toFixed(3)}`, rating: (Math.random() * 1.5 + 3.5).toFixed(1), user_ratings_total: Math.floor(Math.random() * 200) + 50, price_level: Math.floor(Math.random() * 3) + 1, photos: getRandomPhotos(), phone: element.tags?.phone || generateRandomPhone(), website: element.tags?.website || `https://${element.tags?.name?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'grooming'}.com`, opening_hours: { open_now: Math.random() > 0.3 }, reviews: generateDemoReviews(), services: ["haircut", "beard-trim", "styling"], features: getRandomFeatures(), coordinates: { lat, lon } };
                     });
-                    
                     hideLoadingStations();
                     displayStations();
                 } else {
-                    // Fallback to demo stations if no results
                     showDemoStations();
                 }
             } catch (error) {
@@ -1235,285 +1272,84 @@
                 showDemoStations();
             }
         }
-        
-        // Show demo stations when API is not available
+
         function showDemoStations() {
-            const currentCity = document.getElementById('citySelect').value || 
-                              document.getElementById('locationInput').value || 
-                              'Bengaluru, Karnataka';
-            
+            const currentCity = document.getElementById('citySelect').value || document.getElementById('locationInput').value || 'Bengaluru, Karnataka';
             groomingStations = generateDemoStations(currentCity);
             hideLoadingStations();
             displayStations();
         }
-        
-        // Generate demo stations for selected city
+
         function generateDemoStations(city) {
-            const stationNames = [
-                'Royal Cuts & Grooming', 'Mysore Palace Salon', 'Karnataka Kings Barber', 
-                'Bangalore Style Studio', 'Heritage Grooming Lounge', 'The Maharaja\'s Chair',
-                'Elite Gents Salon', 'Classic Kannada Cuts', 'Modern Mysuru Barbers',
-                'The Grooming Rajya', 'Precision Hair Studio', 'Namma Barber Shop'
-            ];
-            
+            const stationNames = ['Royal Cuts & Grooming', 'Mysore Palace Salon', 'Karnataka Kings Barber', 'Bangalore Style Studio', 'Heritage Grooming Lounge', 'The Maharaja\'s Chair', 'Elite Gents Salon', 'Classic Kannada Cuts', 'Modern Mysuru Barbers', 'The Grooming Rajya', 'Precision Hair Studio', 'Namma Barber Shop'];
             const neighborhoods = getNeighborhoods(city);
-            const demoPhotos = [
-                'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&h=300&fit=crop'
-            ];
-            
-            return stationNames.map((name, index) => ({
-                id: `demo_${index}`,
-                name: name,
-                location: `${neighborhoods[index % neighborhoods.length]}, ${city}`,
-                rating: (Math.random() * 1.5 + 3.5).toFixed(1),
-                user_ratings_total: Math.floor(Math.random() * 200) + 50,
-                price_level: Math.floor(Math.random() * 3) + 1,
-                photos: demoPhotos.slice(0, Math.floor(Math.random() * 3) + 2).map(url => ({ getUrl: () => url })),
-                place_id: `demo_${index}`,
-                phone: `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
-                website: `https://${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`,
-                reviews: generateDemoReviews(),
-                services: ["haircut", "beard-trim", "styling"],
-                features: getRandomFeatures(),
-                opening_hours: { open_now: Math.random() > 0.3 }
-            }));
+            const demoPhotos = ['https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&h=300&fit=crop'];
+            return stationNames.map((name, index) => ({ id: `demo_${index}`, name: name, location: `${neighborhoods[index % neighborhoods.length]}, ${city}`, rating: (Math.random() * 1.5 + 3.5).toFixed(1), user_ratings_total: Math.floor(Math.random() * 200) + 50, price_level: Math.floor(Math.random() * 3) + 1, photos: demoPhotos.slice(0, Math.floor(Math.random() * 3) + 2).map(url => ({ getUrl: () => url })), place_id: `demo_${index}`, phone: `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`, website: `https://${name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`, reviews: generateDemoReviews(), services: ["haircut", "beard-trim", "styling"], features: getRandomFeatures(), opening_hours: { open_now: Math.random() > 0.3 } }));
         }
-        
-        // Get neighborhoods for different cities
+
         function getNeighborhoods(city) {
-            const cityNeighborhoods = {
-                'Bengaluru, Karnataka': ['Koramangala', 'Indiranagar', 'Whitefield', 'Electronic City', 'Jayanagar', 'Malleshwaram', 'HSR Layout', 'BTM Layout'],
-                'Mysuru, Karnataka': ['Saraswathipuram', 'Kuvempunagar', 'Vijayanagar', 'Gokulam', 'Hebbal', 'Nazarbad', 'Chamundipuram', 'Bogadi'],
-                'Hubli, Karnataka': ['Vidyanagar', 'Keshwapur', 'Gokul Road', 'Deshpande Nagar', 'Unkal', 'Rayapur', 'Navanagar', 'Old Hubli'],
-                'Dharwad, Karnataka': ['Saptapur', 'Vidyagiri', 'Navalur', 'Kelgeri', 'Malmaddi', 'Hosur', 'Jubilee Circle', 'Lakmanahalli'],
-                'Mangaluru, Karnataka': ['Kadri', 'Kankanady', 'Falnir', 'Bejai', 'Pandeshwar', 'Balmatta', 'Kodialbail', 'Lalbagh'],
-                'Belagavi, Karnataka': ['Tilakwadi', 'Camp', 'Shahapur', 'Hindwadi', 'Vadgaon', 'Angol', 'Mahantesh Nagar', 'Udyambag'],
-                'Davangere, Karnataka': ['PJ Extension', 'Shivaji Nagar', 'Vidyanagar', 'Shamanur', 'Lokikere', 'Bapuji Nagar', 'Anjaneya Nagar', 'Nittuvalli'],
-                'Ballari, Karnataka': ['Cantonment', 'Gandhi Nagar', 'Cowl Bazaar', 'Parvathi Nagar', 'Ravi Nagar', 'Jeevan Nagar', 'Nehru Nagar', 'Vijayanagar'],
-                'Vijayapura, Karnataka': ['Station Road', 'MG Road', 'Azad Road', 'Solapur Road', 'Tikota', 'Minchnal', 'Sindagi Road', 'Almatti Road'],
-                'Shivamogga, Karnataka': ['Kuvempu Nagar', 'Vidyanagar', 'Gandhi Bazaar', 'Gopala', 'Shankara', 'Vinoba Nagar', 'Tunga Nagar', 'Nehru Nagar'],
-                'Tumakuru, Karnataka': ['Kyathasandra', 'Vasavi Nagar', 'Sira Gate', 'Madhugiri Road', 'Kunigal Road', 'Gubbi Cross', 'Tiptur Road', 'Pavagada Road'],
-                'Raichur, Karnataka': ['Station Road', 'Gandhi Chowk', 'Jawahar Nagar', 'Shivaji Nagar', 'Nehru Nagar', 'Ambedkar Nagar', 'Sindhanur Road', 'Manvi Road'],
-                'Bidar, Karnataka': ['Udgir Road', 'Humnabad Road', 'Basavakalyan Road', 'Aurad Road', 'Bhalki Road', 'Kamalnagar', 'Vijay Nagar', 'Shivaji Nagar'],
-                'Hospet, Karnataka': ['Station Road', 'Hampi Road', 'Toranagallu', 'Kampli Road', 'Sandur Road', 'Bellary Road', 'Gandhi Nagar', 'Nehru Nagar'],
-                'Hassan, Karnataka': ['BM Road', 'Vidyanagar', 'Salagame Road', 'Arsikere Road', 'Belur Road', 'Channarayapatna Road', 'Holenarasipura Road', 'Alur Road'],
-                'Gadag, Karnataka': ['Station Road', 'Betgeri', 'Hulkoti', 'Shirhatti Road', 'Mundargi Road', 'Ron Road', 'Nargund Road', 'Lakshmeshwar Road'],
-                'Udupi, Karnataka': ['Manipal', 'Karkala Road', 'Kundapura Road', 'Brahmavar Road', 'Kaup Road', 'Hebri Road', 'Byndoor Road', 'Santhekatte'],
-                'Kolar, Karnataka': ['KGF Road', 'Bangarpet Road', 'Mulbagal Road', 'Srinivaspur Road', 'Malur Road', 'Robertsonpet', 'Champion Reefs', 'Oorgaum'],
-                'Mandya, Karnataka': ['KRS Road', 'Mysore Road', 'Srirangapatna Road', 'Maddur Road', 'Malavalli Road', 'Pandavapura Road', 'Nagamangala Road', 'Krishnarajpet Road'],
-                'Chikkamagaluru, Karnataka': ['MG Road', 'Kadur Road', 'Tarikere Road', 'Koppa Road', 'Sringeri Road', 'Mudigere Road', 'Balehonnur Road', 'Ajjampura Road'],
-                'Chitradurga, Karnataka': ['Holalkere Road', 'Hiriyur Road', 'Challakere Road', 'Hosadurga Road', 'Molakalmuru Road', 'Bharamasagara Road', 'Davangere Road', 'Bellary Road']
-            };
-            
+            const cityNeighborhoods = { 'Bengaluru, Karnataka': ['Koramangala', 'Indiranagar', 'Whitefield', 'Electronic City', 'Jayanagar', 'Malleshwaram', 'HSR Layout', 'BTM Layout'], 'Mysuru, Karnataka': ['Saraswathipuram', 'Kuvempunagar', 'Vijayanagar', 'Gokulam', 'Hebbal', 'Nazarbad', 'Chamundipuram', 'Bogadi'], 'Hubli, Karnataka': ['Vidyanagar', 'Keshwapur', 'Gokul Road', 'Deshpande Nagar', 'Unkal', 'Rayapur', 'Navanagar', 'Old Hubli'], 'Dharwad, Karnataka': ['Saptapur', 'Vidyagiri', 'Navalur', 'Kelgeri', 'Malmaddi', 'Hosur', 'Jubilee Circle', 'Lakmanahalli'], 'Mangaluru, Karnataka': ['Kadri', 'Kankanady', 'Falnir', 'Bejai', 'Pandeshwar', 'Balmatta', 'Kodialbail', 'Lalbagh'], 'Belagavi, Karnataka': ['Tilakwadi', 'Camp', 'Shahapur', 'Hindwadi', 'Vadgaon', 'Angol', 'Mahantesh Nagar', 'Udyambag'], 'Davangere, Karnataka': ['PJ Extension', 'Shivaji Nagar', 'Vidyanagar', 'Shamanur', 'Lokikere', 'Bapuji Nagar', 'Anjaneya Nagar', 'Nittuvalli'], 'Ballari, Karnataka': ['Cantonment', 'Gandhi Nagar', 'Cowl Bazaar', 'Parvathi Nagar', 'Ravi Nagar', 'Jeevan Nagar', 'Nehru Nagar', 'Vijayanagar'], 'Vijayapura, Karnataka': ['Station Road', 'MG Road', 'Azad Road', 'Solapur Road', 'Tikota', 'Minchnal', 'Sindagi Road', 'Almatti Road'], 'Shivamogga, Karnataka': ['Kuvempu Nagar', 'Vidyanagar', 'Gandhi Bazaar', 'Gopala', 'Shankara', 'Vinoba Nagar', 'Tunga Nagar', 'Nehru Nagar'], 'Tumakuru, Karnataka': ['Kyathasandra', 'Vasavi Nagar', 'Sira Gate', 'Madhugiri Road', 'Kunigal Road', 'Gubbi Cross', 'Tiptur Road', 'Pavagada Road'], 'Raichur, Karnataka': ['Station Road', 'Gandhi Chowk', 'Jawahar Nagar', 'Shivaji Nagar', 'Nehru Nagar', 'Ambedkar Nagar', 'Sindhanur Road', 'Manvi Road'], 'Bidar, Karnataka': ['Udgir Road', 'Humnabad Road', 'Basavakalyan Road', 'Aurad Road', 'Bhalki Road', 'Kamalnagar', 'Vijay Nagar', 'Shivaji Nagar'], 'Hospet, Karnataka': ['Station Road', 'Hampi Road', 'Toranagallu', 'Kampli Road', 'Sandur Road', 'Bellary Road', 'Gandhi Nagar', 'Nehru Nagar'], 'Hassan, Karnataka': ['BM Road', 'Vidyanagar', 'Salagame Road', 'Arsikere Road', 'Belur Road', 'Channarayapatna Road', 'Holenarasipura Road', 'Alur Road'], 'Gadag, Karnataka': ['Station Road', 'Betgeri', 'Hulkoti', 'Shirhatti Road', 'Mundargi Road', 'Ron Road', 'Nargund Road', 'Lakshmeshwar Road'], 'Udupi, Karnataka': ['Manipal', 'Karkala Road', 'Kundapura Road', 'Brahmavar Road', 'Kaup Road', 'Hebri Road', 'Byndoor Road', 'Santhekatte'], 'Kolar, Karnataka': ['KGF Road', 'Bangarpet Road', 'Mulbagal Road', 'Srinivaspur Road', 'Malur Road', 'Robertsonpet', 'Champion Reefs', 'Oorgaum'], 'Mandya, Karnataka': ['KRS Road', 'Mysore Road', 'Srirangapatna Road', 'Maddur Road', 'Malavalli Road', 'Pandavapura Road', 'Nagamangala Road', 'Krishnarajpet Road'], 'Chikkamagaluru, Karnataka': ['MG Road', 'Kadur Road', 'Tarikere Road', 'Koppa Road', 'Sringeri Road', 'Mudigere Road', 'Balehonnur Road', 'Ajjampura Road'], 'Chitradurga, Karnataka': ['Holalkere Road', 'Hiriyur Road', 'Challakere Road', 'Hosadurga Road', 'Molakalmuru Road', 'Bharamasagara Road', 'Davangere Road', 'Bellary Road'] };
             return cityNeighborhoods[city] || ['City Center', 'Gandhi Nagar', 'Nehru Nagar', 'Vidyanagar', 'Shivaji Nagar', 'Station Road', 'MG Road', 'Jayanagar'];
         }
-        
-        // Generate demo reviews
+
         function generateDemoReviews() {
-            const reviews = [
-                { text: "Excellent service and great attention to detail. The barber really knew what he was doing!", author_name: "Mike Johnson" },
-                { text: "Clean shop, friendly staff, and reasonable prices. Will definitely be back!", author_name: "David Smith" },
-                { text: "Best haircut I've had in years. Highly recommend this place to anyone.", author_name: "Chris Wilson" },
-                { text: "Professional atmosphere and skilled barbers. Great experience overall.", author_name: "Robert Brown" },
-                { text: "Quick service without compromising quality. Perfect for busy schedules.", author_name: "James Davis" }
-            ];
-            
+            const reviews = [{ text: "Excellent service and great attention to detail. The barber really knew what he was doing!", author_name: "Mike Johnson" }, { text: "Clean shop, friendly staff, and reasonable prices. Will definitely be back!", author_name: "David Smith" }, { text: "Best haircut I've had in years. Highly recommend this place to anyone.", author_name: "Chris Wilson" }, { text: "Professional atmosphere and skilled barbers. Great experience overall.", author_name: "Robert Brown" }, { text: "Quick service without compromising quality. Perfect for busy schedules.", author_name: "James Davis" }];
             return reviews.slice(0, Math.floor(Math.random() * 3) + 1);
         }
-        
-        // Helper functions for Leaflet implementation
+
         function getRandomPhotos() {
-            const demoPhotos = [
-                'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&h=300&fit=crop'
-            ];
-            
+            const demoPhotos = ['https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=400&h=300&fit=crop'];
             const numPhotos = Math.floor(Math.random() * 3) + 2;
             return demoPhotos.slice(0, numPhotos).map(url => ({ getUrl: () => url }));
         }
-        
+
         function generateRandomPhone() {
             return `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`;
         }
-        
+
         function displayStations() {
             const stationsList = document.getElementById('stationsList');
             stationsList.innerHTML = groomingStations.map((station, index) => {
-                // Handle both old format (with getUrl) and new format (direct URLs)
                 const photos = station.photos || [];
-                const photoUrls = photos.map(photo => 
-                    typeof photo === 'string' ? photo : (photo.getUrl ? photo.getUrl({ maxWidth: 400, maxHeight: 300 }) : photo)
-                );
-                
-                // Use stationName or name for display
+                const photoUrls = photos.map(photo => typeof photo === 'string' ? photo : (photo.getUrl ? photo.getUrl({ maxWidth: 400, maxHeight: 300 }) : photo));
                 const displayName = station.stationName || station.name;
                 const displayLocation = station.address || station.location;
-                
-                return `
-                    <div class="bg-white rounded-xl shadow-sm card-hover overflow-hidden">
-                        ${photoUrls.length > 0 ? `
-                            <div class="image-carousel" data-station-id="${station.id}">
-                                ${photoUrls.map((url, photoIndex) => `
-                                    <img src="${url}" alt="${displayName}" class="carousel-image ${photoIndex === 0 ? 'active' : ''}" loading="lazy">
-                                `).join('')}
-                                ${photoUrls.length > 1 ? `
-                                    <button class="carousel-controls carousel-prev" onclick="previousImage(${index})">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </button>
-                                    <button class="carousel-controls carousel-next" onclick="nextImage(${index})">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </button>
-                                ` : ''}
-                                <!-- Station Name Overlay -->
-                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                                    <h3 class="text-xl font-bold text-white">${displayName}</h3>
-                                    <p class="text-white/90 text-sm">${station.ownerName || 'Professional Grooming'}</p>
-                                </div>
-                            </div>
-                        ` : `
-                            <div class="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center relative">
-                                <i class="fas fa-cut text-4xl text-indigo-600"></i>
-                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                                    <h3 class="text-xl font-bold text-white">${displayName}</h3>
-                                    <p class="text-white/90 text-sm">${station.ownerName || 'Professional Grooming'}</p>
-                                </div>
-                            </div>
-                        `}
-                        
-                        <div class="p-6">
-                            <div class="flex items-center justify-between mb-2">
-                                ${station.opening_hours?.open_now ? 
-                                    '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Open Now</span>' : 
-                                    '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Closed</span>'
-                                }
-                            </div>
-                            <p class="text-gray-700 mb-3 text-sm leading-relaxed">
-                                ${getStationDescription(station)}
-                            </p>
-                            <p class="text-gray-600 mb-2 flex items-center">
-                                <i class="fas fa-map-marker-alt mr-2 text-indigo-600"></i>
-                                ${displayLocation}
-                            </p>
-                            ${station.phone ? `
-                                <p class="text-gray-600 mb-2 flex items-center">
-                                    <i class="fas fa-phone mr-2 text-indigo-600"></i>
-                                    ${station.phone}
-                                </p>
-                            ` : ''}
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center">
-                                    <div class="flex text-yellow-400">
-                                        ${generateStars(station.rating)}
-                                    </div>
-                                    <span class="ml-2 text-sm text-gray-600">${parseFloat(station.rating).toFixed(1)}</span>
-                                    <span class="ml-1 text-sm text-gray-500">(${station.user_ratings_total})</span>
-                                </div>
-                                <div class="text-sm text-gray-500">
-                                    ${getPriceLevel(station.price_level)}
-                                </div>
-                            </div>
-                            
-                            ${station.reviews && station.reviews.length > 0 ? `
-                                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-                                    <p class="text-sm text-gray-700 italic">"${station.reviews[0].text.substring(0, 100)}..."</p>
-                                    <p class="text-xs text-gray-500 mt-1">- ${station.reviews[0].author_name}</p>
-                                </div>
-                            ` : ''}
-                            
-                            <div class="mb-4">
-                                <div class="flex flex-wrap gap-1">
-                                    ${station.features.map(feature => `
-                                        <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">${getFeatureLabel(feature)}</span>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <p class="text-sm font-medium text-gray-700 mb-1">Services:</p>
-                                <div class="flex flex-wrap gap-1">
-                                    ${station.services.map(service => `
-                                        <span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">${getServiceLabel(service)}</span>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            
-                            <button onclick="selectStation('${station.id}')" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">
-                                Book Now
-                            </button>
-                        </div>
-                    </div>
-                `;
+                return `<div class="bg-white rounded-xl shadow-sm card-hover overflow-hidden">${photoUrls.length > 0 ? `<div class="image-carousel" data-station-id="${station.id}">${photoUrls.map((url, photoIndex) => `<img src="${url}" alt="${displayName}" class="carousel-image ${photoIndex === 0 ? 'active' : ''}" loading="lazy">`).join('')}${photoUrls.length > 1 ? `<button class="carousel-controls carousel-prev" onclick="previousImage(${index})"><i class="fas fa-chevron-left"></i></button><button class="carousel-controls carousel-next" onclick="nextImage(${index})"><i class="fas fa-chevron-right"></i></button>` : ''}<div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4"><h3 class="text-xl font-bold text-white">${displayName}</h3><p class="text-white/90 text-sm">${station.ownerName || 'Professional Grooming'}</p></div></div>` : `<div class="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center relative"><i class="fas fa-cut text-4xl text-indigo-600"></i><div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4"><h3 class="text-xl font-bold text-white">${displayName}</h3><p class="text-white/90 text-sm">${station.ownerName || 'Professional Grooming'}</p></div></div>`}<div class="p-6"><div class="flex items-center justify-between mb-2">${station.opening_hours?.open_now ? '<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">Open Now</span>' : '<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Closed</span>'}</div><p class="text-gray-700 mb-3 text-sm leading-relaxed">${getStationDescription(station)}</p><p class="text-gray-600 mb-2 flex items-center"><i class="fas fa-map-marker-alt mr-2 text-indigo-600"></i>${displayLocation}</p>${station.phone ? `<p class="text-gray-600 mb-2 flex items-center"><i class="fas fa-phone mr-2 text-indigo-600"></i>${station.phone}</p>` : ''}<div class="flex items-center justify-between mb-3"><div class="flex items-center"><div class="flex text-yellow-400">${generateStars(station.rating)}</div><span class="ml-2 text-sm text-gray-600">${parseFloat(station.rating).toFixed(1)}</span><span class="ml-1 text-sm text-gray-500">(${station.user_ratings_total})</span></div><div class="text-sm text-gray-500">${getPriceLevel(station.price_level)}</div></div>${station.reviews && station.reviews.length > 0 ? `<div class="mb-4 p-3 bg-gray-50 rounded-lg"><p class="text-sm text-gray-700 italic">"${station.reviews[0].text.substring(0, 100)}..."</p><p class="text-xs text-gray-500 mt-1">- ${station.reviews[0].author_name}</p></div>` : ''}<div class="mb-4"><div class="flex flex-wrap gap-1">${station.features.map(feature => `<span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">${getFeatureLabel(feature)}</span>`).join('')}</div></div><div class="mb-4"><p class="text-sm font-medium text-gray-700 mb-1">Services:</p><div class="flex flex-wrap gap-1">${station.services.map(service => `<span class="bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs">${getServiceLabel(service)}</span>`).join('')}</div></div><button onclick="selectStation('${station.id}')" class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition duration-300">Book Now</button></div></div>`;
             }).join('');
-            
-            // Initialize carousels
             initializeCarousels();
         }
-        
-        // Helper functions for labels
+
         function getStationDescription(station) {
-            const descriptions = {
-                'Royal Cuts & Grooming': 'Premium grooming experience with traditional techniques and modern amenities. Specializing in precision cuts and luxury beard treatments.',
-                'Mysore Palace Salon': 'Elegant salon combining traditional Indian grooming with contemporary styling. Expert stylists trained in classical and modern techniques.',
-                'Karnataka Kings Barber': 'Classic barbershop experience with skilled barbers offering traditional cuts, hot towel shaves, and premium grooming services.'
-            };
-            
+            const descriptions = { 'Royal Cuts & Grooming': 'Premium grooming experience with traditional techniques and modern amenities. Specializing in precision cuts and luxury beard treatments.', 'Mysore Palace Salon': 'Elegant salon combining traditional Indian grooming with contemporary styling. Expert stylists trained in classical and modern techniques.', 'Karnataka Kings Barber': 'Classic barbershop experience with skilled barbers offering traditional cuts, hot towel shaves, and premium grooming services.' };
             const stationName = station.stationName || station.name;
             return descriptions[stationName] || 'Professional grooming services with experienced stylists, quality products, and a comfortable atmosphere for all your grooming needs.';
         }
-        
+
         function getFeatureLabel(feature) {
-            const labels = {
-                'wifi': 'WiFi',
-                'parking': 'Parking',
-                'premium-products': 'Premium Products',
-                'massage-chairs': 'Massage Chairs'
-            };
+            const labels = { 'wifi': 'WiFi', 'parking': 'Parking', 'premium-products': 'Premium Products', 'massage-chairs': 'Massage Chairs' };
             return labels[feature] || feature;
         }
-        
+
         function getServiceLabel(service) {
-            const labels = {
-                'haircut': 'Haircuts',
-                'beard-trim': 'Beard Trimming',
-                'styling': 'Hair Styling',
-                'full-service': 'Full Service'
-            };
+            const labels = { 'haircut': 'Haircuts', 'beard-trim': 'Beard Trimming', 'styling': 'Hair Styling', 'full-service': 'Full Service' };
             return labels[service] || service;
         }
-        
+
         function generateStars(rating) {
             const fullStars = Math.floor(rating);
             const hasHalfStar = rating % 1 >= 0.5;
             let stars = '';
-            
-            for (let i = 0; i < fullStars; i++) {
-                stars += '★';
-            }
-            if (hasHalfStar) {
-                stars += '☆';
-            }
-            while (stars.length < 5) {
-                stars += '☆';
-            }
+            for (let i = 0; i < fullStars; i++) { stars += '★'; }
+            if (hasHalfStar) { stars += '☆'; }
+            while (stars.length < 5) { stars += '☆'; }
             return stars;
         }
-        
+
         function getPriceLevel(level) {
             const prices = ['Free', '$', '$$', '$$$', '$$$$'];
             return prices[level] || '$$';
         }
-        
+
         function getRandomFeatures() {
             const allFeatures = ['WiFi', 'Parking', 'Premium Products', 'Experienced Staff', 'Walk-ins Welcome', 'Online Booking', 'Credit Cards', 'Wheelchair Accessible'];
             const numFeatures = Math.floor(Math.random() * 4) + 2;
@@ -1521,74 +1357,50 @@
             return shuffled.slice(0, numFeatures);
         }
 
-        // Carousel functions
         function initializeCarousels() {
             groomingStations.forEach((station, index) => {
                 if (station.photos && station.photos.length > 1) {
-                    stationCarousels[index] = {
-                        currentIndex: 0,
-                        totalImages: station.photos.length,
-                        autoSlideInterval: setInterval(() => {
-                            nextImage(index);
-                        }, 5000) // Auto-slide every 5 seconds
-                    };
+                    stationCarousels[index] = { currentIndex: 0, totalImages: station.photos.length, autoSlideInterval: setInterval(() => { nextImage(index); }, 5000) };
                 }
             });
         }
-        
+
         function nextImage(stationIndex) {
             const carousel = stationCarousels[stationIndex];
             if (!carousel) return;
-            
             const images = document.querySelectorAll(`[data-station-id="${groomingStations[stationIndex].id}"] .carousel-image`);
             if (images.length === 0) return;
-            
             images[carousel.currentIndex].classList.remove('active');
             carousel.currentIndex = (carousel.currentIndex + 1) % carousel.totalImages;
             images[carousel.currentIndex].classList.add('active');
         }
-        
+
         function previousImage(stationIndex) {
             const carousel = stationCarousels[stationIndex];
             if (!carousel) return;
-            
             const images = document.querySelectorAll(`[data-station-id="${groomingStations[stationIndex].id}"] .carousel-image`);
             if (images.length === 0) return;
-            
             images[carousel.currentIndex].classList.remove('active');
             carousel.currentIndex = carousel.currentIndex === 0 ? carousel.totalImages - 1 : carousel.currentIndex - 1;
             images[carousel.currentIndex].classList.add('active');
         }
-        
-        // Location functions
+
         function useCurrentLocation() {
             if (!navigator.geolocation) {
                 showNotification('Geolocation is not supported by this browser.', 'error');
                 showDemoStations();
                 return;
             }
-            
             showLoadingStations();
             document.getElementById('locationStatus').classList.remove('hidden');
             document.getElementById('currentLocation').textContent = 'Getting your location...';
-            
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    
-                    // Try reverse geocoding if Google API is available
+                    userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
                     if (typeof google !== 'undefined' && google.maps) {
                         const geocoder = new google.maps.Geocoder();
-                        geocoder.geocode({ location: userLocation }, (results, status) => {
-                            if (status === 'OK' && results[0]) {
-                                document.getElementById('currentLocation').textContent = `Searching near: ${results[0].formatted_address}`;
-                            }
-                        });
+                        geocoder.geocode({ location: userLocation }, (results, status) => { if (status === 'OK' && results[0]) { document.getElementById('currentLocation').textContent = `Searching near: ${results[0].formatted_address}`; } });
                     }
-                    
                     searchNearbyStations();
                 },
                 (error) => {
@@ -1599,33 +1411,24 @@
                 }
             );
         }
-        
-        // Search by selected city using Nominatim
+
         async function searchByCity() {
             const citySelect = document.getElementById('citySelect');
             const selectedCity = citySelect.value;
-            
             if (!selectedCity) {
                 showNotification('Please select a city.', 'error');
                 return;
             }
-            
             showLoadingStations();
             document.getElementById('locationStatus').classList.remove('hidden');
             document.getElementById('currentLocation').textContent = `Searching in: ${selectedCity}`;
-            
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(selectedCity)}&limit=1`);
                 const data = await response.json();
-                
                 if (data && data.length > 0) {
-                    userLocation = {
-                        lat: parseFloat(data[0].lat),
-                        lng: parseFloat(data[0].lon)
-                    };
+                    userLocation = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
                     searchNearbyStations();
                 } else {
-                    // Fallback to demo stations
                     showDemoStations();
                 }
             } catch (error) {
@@ -1633,29 +1436,22 @@
                 showDemoStations();
             }
         }
-        
+
         async function searchByLocation() {
             const locationInput = document.getElementById('locationInput');
             const location = locationInput.value.trim();
-            
             if (!location) {
                 showNotification('Please enter a location.', 'error');
                 return;
             }
-            
             showLoadingStations();
             document.getElementById('locationStatus').classList.remove('hidden');
             document.getElementById('currentLocation').textContent = `Searching near: ${location}`;
-            
             try {
                 const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`);
                 const data = await response.json();
-                
                 if (data && data.length > 0) {
-                    userLocation = {
-                        lat: parseFloat(data[0].lat),
-                        lng: parseFloat(data[0].lon)
-                    };
+                    userLocation = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
                     searchNearbyStations();
                 } else {
                     hideLoadingStations();
@@ -1668,25 +1464,33 @@
                 document.getElementById('locationStatus').classList.add('hidden');
             }
         }
-        
+
         function showLoadingStations() {
             document.getElementById('loadingStations').classList.remove('hidden');
             document.getElementById('stationsList').innerHTML = '';
         }
-        
+
         function hideLoadingStations() {
             document.getElementById('loadingStations').classList.add('hidden');
         }
 
+        // --- FIXED: More robust station selection ---
         function selectStation(stationId) {
             if (!currentUser) {
                 showAuthModal('login');
                 return;
             }
-            
-            selectedStation = groomingStations.find(s => s.id === stationId);
+            // Ensure stationId is treated as a string for comparison, as it comes from an HTML attribute.
+            selectedStation = groomingStations.find(s => String(s.id) === String(stationId));
+
+            if (!selectedStation) {
+                console.error("Failed to find station with ID:", stationId);
+                showNotification("Sorry, there was an error selecting that station. Please try again.", "error");
+                return;
+            }
             showBookingModal();
         }
+
 
         function showBookingModal() {
             document.getElementById('bookingModal').classList.remove('hidden');
@@ -1702,36 +1506,20 @@
         function loadTimeSlots() {
             const timeSlotsContainer = document.getElementById('timeSlots');
             const selectedDate = document.getElementById('bookingDate').value;
-            
-            // For demo, randomly make some slots unavailable
             const availableSlots = timeSlots.filter(() => Math.random() > 0.3);
-            
-            timeSlotsContainer.innerHTML = availableSlots.map(time => `
-                <button class="booking-slot p-2 border rounded-md text-sm hover:bg-gray-50 transition duration-200" 
-                        onclick="selectTimeSlot('${time}')">
-                    ${time}
-                </button>
-            `).join('');
+            timeSlotsContainer.innerHTML = availableSlots.map(time => `<button class="booking-slot p-2 border rounded-md text-sm hover:bg-gray-50 transition duration-200" onclick="selectTimeSlot('${time}')">${time}</button>`).join('');
         }
 
         function selectTimeSlot(time) {
-            // Remove previous selection
-            document.querySelectorAll('.booking-slot').forEach(slot => {
-                slot.classList.remove('selected');
-            });
-            
-            // Select current slot
+            document.querySelectorAll('.booking-slot').forEach(slot => { slot.classList.remove('selected'); });
             event.target.classList.add('selected');
             selectedSlot = time;
-            
-            // Enable next button
             document.getElementById('nextToPayment').disabled = false;
         }
 
         function updateBookingDetails() {
             const service = document.getElementById('serviceSelect');
             const nextBtn = document.getElementById('nextToPayment');
-            
             if (service.value && selectedSlot) {
                 nextBtn.disabled = false;
             }
@@ -1741,29 +1529,18 @@
             const service = document.getElementById('serviceSelect');
             const selectedOption = service.options[service.selectedIndex];
             const date = document.getElementById('bookingDate').value;
-            
-            // Find nearest available station for the selected service and time
             const availableStation = findNearestAvailableStation(service.value, date, selectedSlot);
-            
             if (!availableStation) {
                 showNotification('No available stations found for your selected time. Please try a different time slot.', 'error');
                 return;
             }
-            
-            // Set the selected station
             selectedStation = availableStation;
-            
-            // Get station's price for the service
             const stationPrice = getStationPrice(availableStation, service.value);
-            
             document.getElementById('selectedService').textContent = selectedOption.text;
             document.getElementById('selectedDateTime').textContent = `${date} at ${selectedSlot}`;
             document.getElementById('totalAmount').textContent = `$${stationPrice}`;
-            
             document.getElementById('bookingStep1').classList.add('hidden');
             document.getElementById('bookingStep2').classList.remove('hidden');
-            
-            // Generate random NFT number
             document.getElementById('nftNumber').textContent = String(Math.floor(Math.random() * 999) + 1).padStart(3, '0');
         }
 
@@ -1772,41 +1549,15 @@
             document.getElementById('bookingStep2').classList.add('hidden');
         }
 
-        // Find nearest available station for booking
         function findNearestAvailableStation(serviceType, date, timeSlot) {
-            // Filter stations that offer the requested service
-            const availableStations = groomingStations.filter(station => {
-                return station.services && station.services.includes(serviceType) && 
-                       station.opening_hours && station.opening_hours.open_now;
-            });
-            
-            if (availableStations.length === 0) {
-                return null;
-            }
-            
-            // For demo purposes, randomly select from available stations
-            // In a real app, this would consider actual distance and availability
+            const availableStations = groomingStations.filter(station => { return station.services && station.services.includes(serviceType) && station.opening_hours && station.opening_hours.open_now; });
+            if (availableStations.length === 0) { return null; }
             const randomIndex = Math.floor(Math.random() * availableStations.length);
             return availableStations[randomIndex];
         }
 
-        // Get station's price for a specific service
         function getStationPrice(station, serviceType) {
-            // Station-specific pricing based on their tier and service
-            const basePrices = {
-                'haircut': 25,
-                'beard-trim': 15,
-                'full-service': 40,
-                'styling': 30
-            };
-            
-            const basePrice = basePrices[serviceType] || 25;
-            const priceMultiplier = station.price_level || 2;
-            
-            // Adjust price based on station's price level (1-4)
-            const adjustedPrice = Math.round(basePrice * (priceMultiplier * 0.8));
-            
-            return adjustedPrice;
+            return 15;
         }
 
         function handlePaymentMethodChange(e) {
@@ -1816,67 +1567,6 @@
             } else {
                 nftPreview.classList.add('hidden');
             }
-        }
-
-        function confirmBooking() {
-            const service = document.getElementById('serviceSelect');
-            const selectedOption = service.options[service.selectedIndex];
-            const date = document.getElementById('bookingDate').value;
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
-            
-            if (!paymentMethod) {
-                alert('Please select a payment method');
-                return;
-            }
-            
-            if (!selectedStation) {
-                showNotification('No station selected. Please try booking again.', 'error');
-                return;
-            }
-            
-            // Get the price from the displayed total amount
-            const totalAmountText = document.getElementById('totalAmount').textContent;
-            const amount = totalAmountText.replace('$', '');
-            
-            // Create booking
-            const booking = {
-                id: Date.now(),
-                stationId: selectedStation.id,
-                stationName: selectedStation.stationName || selectedStation.name,
-                stationAddress: selectedStation.address || selectedStation.location,
-                service: selectedOption.text,
-                date: date,
-                time: selectedSlot,
-                amount: amount,
-                paymentMethod: paymentMethod.value,
-                status: 'confirmed',
-                createdAt: new Date().toISOString()
-            };
-            
-            bookings.push(booking);
-            localStorage.setItem('slotchain_bookings', JSON.stringify(bookings));
-            
-            // Create NFT if paid with crypto
-            if (paymentMethod.value === 'hedera') {
-                const nft = {
-                    id: Date.now(),
-                    number: document.getElementById('nftNumber').textContent,
-                    service: service.value,
-                    date: date,
-                    rarity: Math.random() > 0.7 ? 'rare' : 'common',
-                    createdAt: new Date().toISOString()
-                };
-                nftCollection.push(nft);
-                localStorage.setItem('slotchain_nfts', JSON.stringify(nftCollection));
-            }
-            
-            hideBookingModal();
-            showNotification(`Booking confirmed at ${selectedStation.stationName || selectedStation.name}! Check your dashboard for details.`);
-            
-            // Send email notification (simulated)
-            setTimeout(() => {
-                showNotification('Confirmation email sent!', 'info');
-            }, 2000);
         }
 
         function showDashboard() {
@@ -1890,114 +1580,50 @@
             document.getElementById('dashboard').classList.add('hidden');
         }
 
-        function loadDashboardData() {
-            loadUpcomingBookings();
-            loadBookingHistory();
-            loadNFTCollection();
-        }
-
         function loadUpcomingBookings() {
             const container = document.getElementById('upcomingBookings');
             const upcoming = bookings.filter(b => new Date(b.date) >= new Date()).slice(0, 3);
-            
             if (upcoming.length === 0) {
                 container.innerHTML = '<p class="text-gray-500">No upcoming appointments</p>';
                 return;
             }
-            
-            container.innerHTML = upcoming.map(booking => `
-                <div class="border rounded-lg p-4 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-semibold">${booking.service}</h4>
-                        <p class="text-gray-600">${booking.stationName}</p>
-                        ${booking.stationAddress ? `<p class="text-xs text-gray-500">${booking.stationAddress}</p>` : ''}
-                        <p class="text-sm text-gray-500">${booking.date} at ${booking.time}</p>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-lg font-semibold">$${booking.amount}</div>
-                        <div class="text-sm text-green-600">${booking.status}</div>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = upcoming.map(booking => `<div class="border rounded-lg p-4 flex justify-between items-center"><div><h4 class="font-semibold">${booking.service}</h4><p class="text-gray-600">${booking.stationName}</p>${booking.stationAddress ? `<p class="text-xs text-gray-500">${booking.stationAddress}</p>` : ''}<p class="text-sm text-gray-500">${booking.date} at ${booking.time}</p></div><div class="text-right"><div class="text-lg font-semibold">$${booking.amount}</div><div class="text-sm text-green-600">${booking.status}</div></div></div>`).join('');
         }
 
         function loadBookingHistory() {
             const container = document.getElementById('bookingHistory');
             const history = bookings.slice(-5).reverse();
-            
             if (history.length === 0) {
                 container.innerHTML = '<p class="text-gray-500">No booking history</p>';
                 return;
             }
-            
-            container.innerHTML = history.map(booking => `
-                <div class="border rounded-lg p-4 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-semibold">${booking.service}</h4>
-                        <p class="text-gray-600">${booking.stationName}</p>
-                        ${booking.stationAddress ? `<p class="text-xs text-gray-500">${booking.stationAddress}</p>` : ''}
-                        <p class="text-sm text-gray-500">${booking.date} at ${booking.time}</p>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-lg font-semibold">$${booking.amount}</div>
-                        <div class="text-sm ${booking.paymentMethod === 'hedera' ? 'text-indigo-600' : 'text-gray-600'}">
-                            ${booking.paymentMethod === 'hedera' ? 'HBAR' : 'Card'}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = history.map(booking => `<div class="border rounded-lg p-4 flex justify-between items-center"><div><h4 class="font-semibold">${booking.service}</h4><p class="text-gray-600">${booking.stationName}</p>${booking.stationAddress ? `<p class="text-xs text-gray-500">${booking.stationAddress}</p>` : ''}<p class="text-sm text-gray-500">${booking.date} at ${booking.time}</p></div><div class="text-right"><div class="text-lg font-semibold">$${booking.amount}</div><div class="text-sm ${booking.paymentMethod === 'hedera' ? 'text-indigo-600' : 'text-gray-600'}">${booking.paymentMethod === 'hedera' ? 'HBAR' : 'Card'}</div></div></div>`).join('');
         }
 
         function loadNFTCollection() {
             const container = document.getElementById('nftCollection');
-            
             if (nftCollection.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-2 text-center py-8">
-                        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                            <i class="fas fa-gem text-white text-2xl"></i>
-                        </div>
-                        <p class="text-gray-500 font-medium">No NFTs collected yet</p>
-                        <p class="text-sm text-gray-400 mt-1">Pay with HBAR to earn exclusive NFTs!</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="col-span-2 text-center py-8"><div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg"><i class="fas fa-gem text-white text-2xl"></i></div><p class="text-gray-500 font-medium">No NFTs collected yet</p><p class="text-sm text-gray-400 mt-1">Pay with HBAR to earn exclusive NFTs!</p></div>`;
                 return;
             }
-            
-            container.innerHTML = nftCollection.map(nft => `
-                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4 text-center border border-purple-200 dark:border-purple-700 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-                    <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg nft-shimmer">
-                        <i class="fas fa-cut text-white text-xl"></i>
-                    </div>
-                    <div class="text-lg font-bold text-gray-900 dark:text-white mb-1">#${nft.number}</div>
-                    <div class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">${nft.rarity}</div>
-                    <div class="text-xs text-gray-500 dark:text-gray-400">${nft.service}</div>
-                    <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">${new Date(nft.date).toLocaleDateString()}</div>
-                </div>
-            `).join('');
+            container.innerHTML = nftCollection.map(nft => `<div class="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4 text-center border border-purple-200 dark:border-purple-700 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105"><div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-lg nft-shimmer"><i class="fas fa-cut text-white text-xl"></i></div><div class="text-lg font-bold text-gray-900 dark:text-white mb-1">#${nft.number}</div><div class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wide mb-1">${nft.rarity}</div><div class="text-xs text-gray-500 dark:text-gray-400">${nft.service}</div><div class="text-xs text-gray-400 dark:text-gray-500 mt-1">${new Date(nft.date).toLocaleDateString()}</div></div>`).join('');
         }
 
         function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             const text = document.getElementById('notificationText');
-            
             text.textContent = message;
             let bgColor = 'bg-green-500';
             if (type === 'error') bgColor = 'bg-red-500';
             else if (type === 'info') bgColor = 'bg-blue-500';
-            
             notification.className = `notification ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg show`;
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 7000);
+            setTimeout(() => { notification.classList.remove('show'); }, 7000);
         }
 
         function closeNotification() {
             document.getElementById('notification').classList.remove('show');
         }
 
-        // Station Setup Functions
         function showStationSetupModal() {
             document.getElementById('stationSetupModal').classList.remove('hidden');
         }
@@ -2009,48 +1635,15 @@
 
         function handleStationSetup(e) {
             e.preventDefault();
-            
-            // Collect form data
-            const formData = {
-                id: `station_${Date.now()}`,
-                stationName: document.getElementById('stationName').value,
-                ownerName: document.getElementById('ownerName').value,
-                address: document.getElementById('stationAddress').value,
-                phone: document.getElementById('stationPhone').value,
-                email: document.getElementById('stationEmail').value,
-                walletAddress: document.getElementById('walletAddress').value,
-                services: Array.from(document.querySelectorAll('.service-checkbox:checked')).map(cb => cb.value),
-                features: Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value),
-                rating: (Math.random() * 1.5 + 3.5).toFixed(1),
-                user_ratings_total: Math.floor(Math.random() * 100) + 20,
-                price_level: Math.floor(Math.random() * 3) + 1,
-                photos: [
-                    'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop',
-                    'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop'
-                ],
-                reviews: [
-                    { text: "Great new addition to the SlotChain network!", author_name: "Customer Review" }
-                ],
-                opening_hours: { open_now: true },
-                submittedAt: new Date().toISOString(),
-                status: 'approved' // Auto-approve for demo
-            };
-            
-            // Store application (in real app, this would be sent to server)
+            const formData = { id: `station_${Date.now()}`, stationName: document.getElementById('stationName').value, ownerName: document.getElementById('ownerName').value, address: document.getElementById('stationAddress').value, phone: document.getElementById('stationPhone').value, email: document.getElementById('stationEmail').value, walletAddress: document.getElementById('walletAddress').value, services: Array.from(document.querySelectorAll('.service-checkbox:checked')).map(cb => cb.value), features: Array.from(document.querySelectorAll('.feature-checkbox:checked')).map(cb => cb.value), rating: (Math.random() * 1.5 + 3.5).toFixed(1), user_ratings_total: Math.floor(Math.random() * 100) + 20, price_level: Math.floor(Math.random() * 3) + 1, photos: ['https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&h=300&fit=crop', 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&h=300&fit=crop'], reviews: [{ text: "Great new addition to the SlotChain network!", author_name: "Customer Review" }], opening_hours: { open_now: true }, submittedAt: new Date().toISOString(), status: 'approved' };
             let stationApplications = JSON.parse(localStorage.getItem('slotchain_station_applications') || '[]');
             stationApplications.push(formData);
             localStorage.setItem('slotchain_station_applications', JSON.stringify(stationApplications));
-            
             hideStationSetupModal();
             showNotification('Station setup submitted successfully! Your station is now live on SlotChain.');
-            
-            // Auto-refresh the stations list
             showAvailableStations();
         }
 
-
-
-        // Chatbot Functions
         function toggleChatbot() {
             const window = document.getElementById('chatbotWindow');
             chatbotOpen = !chatbotOpen;
@@ -2065,44 +1658,14 @@
         async function sendChatMessage() {
             const input = document.getElementById('chatbotInput');
             const message = input.value.trim();
-            
             if (!message) return;
-            
-            // Add user message
             addChatMessage(message, 'user');
             input.value = '';
-            
-            // Show typing indicator
             showTypingIndicator();
-            
             try {
-                // Call Perplexity API
-                const response = await fetch(PERPLEXITY_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: 'llama-3.1-sonar-small-128k-online',
-                        messages: [
-                            {
-                                role: 'system',
-                                content: 'You are a helpful assistant for SlotChain, a grooming station booking platform. Help users with booking questions, payment info (we accept Hedera HBAR crypto and traditional cards), NFT rewards, and general platform questions. Keep responses concise and friendly.'
-                            },
-                            {
-                                role: 'user',
-                                content: message
-                            }
-                        ],
-                        max_tokens: 150,
-                        temperature: 0.7
-                    })
-                });
-
+                const response = await fetch(PERPLEXITY_API_URL, { method: 'POST', headers: { 'Authorization': `Bearer ${PERPLEXITY_API_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'llama-3.1-sonar-small-128k-online', messages: [{ role: 'system', content: 'You are a helpful assistant for SlotChain, a grooming station booking platform. Help users with booking questions, payment info (we accept Hedera HBAR crypto and traditional cards), NFT rewards, and general platform questions. Keep responses concise and friendly.' }, { role: 'user', content: message }], max_tokens: 150, temperature: 0.7 }) });
                 const data = await response.json();
                 hideTypingIndicator();
-                
                 if (data.choices && data.choices[0]) {
                     addChatMessage(data.choices[0].message.content, 'bot');
                 } else {
@@ -2110,7 +1673,6 @@
                 }
             } catch (error) {
                 hideTypingIndicator();
-                // Fallback responses for common questions
                 const fallbackResponse = getFallbackResponse(message);
                 addChatMessage(fallbackResponse, 'bot');
             }
@@ -2118,7 +1680,6 @@
 
         function getFallbackResponse(message) {
             const lowerMessage = message.toLowerCase();
-            
             if (lowerMessage.includes('book') || lowerMessage.includes('appointment')) {
                 return 'To book an appointment, click "Book Now" on any grooming station or use the main "Book Now" button. You\'ll need to create an account first if you haven\'t already!';
             } else if (lowerMessage.includes('payment') || lowerMessage.includes('pay')) {
@@ -2151,41 +1712,6 @@
             document.getElementById('typingIndicator').style.display = 'none';
         }
 
-        // Initialize on page load
-        window.addEventListener('load', function() {
-            // Simulate some demo data for first-time users
-            if (bookings.length === 0 && currentUser) {
-                // Add some sample bookings for demo
-                const sampleBookings = [
-                    {
-                        id: 1,
-                        stationId: 1,
-                        stationName: 'Premium Cuts Downtown',
-                        service: 'Haircut - $25',
-                        date: '2024-01-15',
-                        time: '14:00',
-                        amount: '25',
-                        paymentMethod: 'hedera',
-                        status: 'completed',
-                        createdAt: '2024-01-10T10:00:00Z'
-                    }
-                ];
-                
-                const sampleNFTs = [
-                    {
-                        id: 1,
-                        number: '001',
-                        service: 'haircut',
-                        date: '2024-01-15',
-                        rarity: 'rare',
-                        createdAt: '2024-01-15T14:00:00Z'
-                    }
-                ];
-                
-                localStorage.setItem('slotchain_bookings', JSON.stringify(sampleBookings));
-                localStorage.setItem('slotchain_nfts', JSON.stringify(sampleNFTs));
-            }
-        });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96968208d7fb937f',t:'MTc1NDIzMTM3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
